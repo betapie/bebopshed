@@ -103,5 +103,8 @@ dist
 # TernJS port file
 .tern-port
 
+# frontend static output files
+bebopshed/frontend/static/frontend/
+
 __pycache__
 db.sqlite3
