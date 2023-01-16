@@ -6,6 +6,9 @@ export default class App extends React.Component {
     super(props);
     this.state = {
       line: "<p>missing</p>",
+      artist: "",
+      song: "",
+      year: ""
     };
   }
 
