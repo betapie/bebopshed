@@ -13,6 +13,11 @@ export default class App extends React.Component {
   }
 
   componentDidMount() {
+    this.queryNewLine()
+  }
+
+  queryNewLine() {
+    console.log("querying new line...")
     fetch("/api/generate")
       .then((response) => response.json())
       .then((data) => {
@@ -38,7 +43,11 @@ export default class App extends React.Component {
       <div className="panel">
         <div className="line-info">{info}</div>
         <div id="line-graphic">{parse(this.state.line)}</div>
-        <div id="btn-generate">Give me another one!</div>
+        <button 
+          id="btn-generate"
+          onClick={() => this.queryNewLine()}>
+            Give me another one!
+        </button>
       </div>
     );
   }
