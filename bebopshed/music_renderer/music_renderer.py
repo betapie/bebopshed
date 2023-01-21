@@ -1,4 +1,5 @@
 import subprocess
+import tempfile
 
 
 class MusicRenderer:
@@ -6,14 +7,20 @@ class MusicRenderer:
 
     def render(self, line_ly: str, chords_ly: str):
         lily_string = self.create_ly_string(line_ly, chords_ly)
-        # TODO use pipes for output
-        proc = subprocess.Popen(["lilypond", "-o", "tmp/tmp", "--svg", '-'],
-                                stdin=subprocess.PIPE)
+        tmp_file = tempfile.NamedTemporaryFile("r", dir="tmp", suffix=".svg")
+
+        proc = subprocess.Popen(
+            ["lilypond", "-o", tmp_file.name[:-4], "--svg", '-'],
+            stdin=subprocess.PIPE)
         try:
             proc.communicate(bytes(lily_string, "utf-8"))
         except subprocess.TimeoutExpired:
             proc.kill()
             proc.communicate()
+
+        svg_content = tmp_file.read()
+        tmp_file.close()
+        return svg_content
 
     def create_ly_string(self, line_ly: str, chords_ly: str):
         ly_string = ""

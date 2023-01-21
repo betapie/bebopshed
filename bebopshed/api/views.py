@@ -32,12 +32,9 @@ def generate_line(request):
     line = Line.objects.all()[random.randint(0, count-1)]
 
     renderer = MusicRenderer()
-    renderer.render(line.line, line.chords)
+    svg = renderer.render(line.line, line.chords)
 
-    with open("tmp/tmp.svg", 'r') as svg_file:
-        content = svg_file.read()
-        result["line"] = content
-
+    result["line"] = svg
     result["artist"] = line.artist.name
     result["song"] = line.song
     result["year"] = line.year
