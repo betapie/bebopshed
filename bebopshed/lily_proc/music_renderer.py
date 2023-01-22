@@ -1,12 +1,14 @@
 import subprocess
 import tempfile
 
+from .lily_builder import (
+    LilyBuilder, LilyCommand, LilyExpression, LilySimulExpression
+)
+
 
 class MusicRenderer:
-    LILYPOND_VERSION = "2.22.1"
-
-    def render(self, line_ly: str, chords_ly: str):
-        lily_string = self.create_ly_string(line_ly, chords_ly)
+    def render(self, line: str, chords: str):
+        lily_string = self.create_lily_string(line, chords)
         tmp_file = tempfile.NamedTemporaryFile("r", dir="tmp", suffix=".svg")
 
         proc = subprocess.Popen(
@@ -22,27 +24,27 @@ class MusicRenderer:
         tmp_file.close()
         return svg_content
 
-    def create_ly_string(self, line_ly: str, chords_ly: str):
-        ly_string = ""
-        ly_string += f"\\version \"{self.LILYPOND_VERSION}\" \n\n"
+    def create_lily_string(self, line: str, chords: str):
+        builder = LilyBuilder()
 
-        # TODO includes, styles
-        ly_string += "\\include \"music_renderer/lily_styles/line.ily\""
-        ly_string += "\\include \"music_renderer/lily_styles/lilyjazz.ily\""
-        ly_string += "\\include \"music_renderer/lily_styles/jazzchords.ily\""
+        builder.add(LilyCommand(
+            "include", "\"lily_proc/lily_styles/line.ily\""))
+        builder.add(LilyCommand(
+            "include", "\"lily_proc/lily_styles/lilyjazz.ily\""))
+        builder.add(LilyCommand(
+            "include", "\"lily_proc/lily_styles/jazzchords.ily\""))
 
-        ly_string += "\\score {\n"
-        ly_string += "<<\n"
+        builder.add(
+            LilyExpression(
+                "score",
+                LilySimulExpression(
+                    LilyExpression("chords", chords),
+                    LilyExpression(
+                        "new Staff",
+                        LilyExpression("relative c", line)
+                    )
+                )
+            )
+        )
 
-        ly_string += "\\chords {\n"
-        ly_string += chords_ly + '\n'
-        ly_string += "}\n"
-
-        ly_string += "\\new Staff \\relative c {\n"
-        ly_string += line_ly + '\n'
-        ly_string += "}\n"
-
-        ly_string += ">>\n"
-        ly_string += "}\n"
-
-        return ly_string
+        return builder.dump()
