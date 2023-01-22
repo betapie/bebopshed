@@ -10,44 +10,27 @@
 
 :root {
   --bg-color: #121212;
+  /* --accent-color: #1f2933; */
   --accent-color: #1f2933;
   --light-accent-color: #2d3c4c;
   --action-color: orange;
   --txt-color: #bdbdbd;
 }
 
+*{
+  margin:0;
+  padding:0;
+  box-sizing: border-box;
+}
+
 body {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  text-align: center;
   min-height: 100vh;
   background-color: var(--bg-color);
   font-family: lilyjazz-text;
 }
 
 #app-wrapper {
-  width: calc(100%-40px);
-  margin: 20px;
-}
-
-#main {
   width: 100%;
-}
-
-.panel {
-  flex: 1;
-  flex-grow: 1;
-  background-color: var(--accent-color);
-  border-radius: 10px;
-  padding: 50px 40px;
-  border: 2px solid var(--txt-color);
-}
-
-.line-info {
-  color: var(--txt-color);
-  font-size: larger;
-  font-weight: bold;
 }
 
 #line-graphic > svg {
@@ -61,15 +44,7 @@ body {
   margin-bottom: 20px;
 }
 
-#btn-generate {
-  background-color: var(--light-accent-color);
-  color: var(--txt-color);
-  font-family: lilyjazz-text;
-  font-size: large;
-  padding: 20px;
-}
-
-#btn-generate:hover {
+/* #btn-generate:hover {
   background-color: var(--txt-color);
   color: black;
-}
+} */
