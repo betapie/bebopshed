@@ -19,7 +19,6 @@ const Panel = styled.div`
 const PanelHeading = styled.div`
   color: var(--txt-color);
   font-size: larger;
-  font-weight: bold;
 `;
 
 const MainWrapper = styled.div`

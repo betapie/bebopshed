@@ -1,10 +1,11 @@
 
 const colors = {
     background: "#121212",
-    accent: "#1f2933",
-    lightAccent: "#2d3c4c",
+    accent: "#1E2225",
+    lightAccent: "#313437",
     highlight: "orange",
-    text: "#bdbdbd"
+    text: "#BDBDBD",
+    text_deselected: "#AAAAAA"
 }
 
 export default colors;
