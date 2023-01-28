@@ -18,6 +18,7 @@ const StyledNavbar = styled(BootstrapNavbar)`
   }
   .navbar-brand:hover {
     color: orange;
+    text-decoration: solid underline orange 3px;
   }
   .nav-link {
     color: ${colors.text_deselected};
@@ -27,12 +28,13 @@ const StyledNavbar = styled(BootstrapNavbar)`
   }
   .nav-link:hover {
     color: orange;
+    text-decoration: solid underline orange 3px;
   }
 `;
 
 function Navbar() {
   return (
-    <StyledNavbar collapseOnSelect expand="lg">
+    <StyledNavbar collapseOnSelect variant="dark" expand="lg">
       <Container>
         <BootstrapNavbar.Brand href="/">Bebopshed</BootstrapNavbar.Brand>
         <BootstrapNavbar.Toggle aria-controls="responsive-navbar-nav" />

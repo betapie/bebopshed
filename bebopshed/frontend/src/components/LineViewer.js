@@ -2,35 +2,25 @@ import React from "react";
 import styled from "styled-components";
 import parse from "html-react-parser";
 import { Button } from "react-bootstrap";
-import colors from "../style/ColorPalette";
+import {
+  MainWrapper,
+  MainContent,
+  Panel,
+  PanelHeading,
+} from "./MainComponents";
 import Spinner from "./Spinner";
 
-const Panel = styled.div`
-  background-color: ${colors.accent};
-  border-radius: 10px;
-  padding: 50px 40px;
-  border: 2px solid ${colors.lightAccent};
-  width: 100%;
-  justify-content: center;
-  align-items: center;
-  text-align: center;
-`;
-
-const PanelHeading = styled.div`
-  color: var(--txt-color);
-  font-size: larger;
-`;
-
-const MainWrapper = styled.div`
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  min-height: calc(100vh - 50px);
-`;
-
-const MainContent = styled.div`
-  width: 100%;
-  max-width: 1000px;
+const LineGraphic = styled.div`
+  svg {
+    width: 100%;
+    max-width: 100%;
+    height: 100%;
+    border: 2px solid var(--txt-color);
+    border-radius: 5px;
+    background-color: var(--txt-color);
+    margin-top: 20px;
+    margin-bottom: 20px;
+  }
 `;
 
 const DEFAULT_STATE = {
@@ -81,7 +71,7 @@ export default class LineViewer extends React.Component {
         <MainContent>
           <Panel>
             <PanelHeading>{info}</PanelHeading>
-            <div id="line-graphic">{line}</div>
+            <LineGraphic id="line-graphic">{line}</LineGraphic>
             <Button id="btn-generate" onClick={() => this.fetchLine()}>
               Give me another one!
             </Button>
