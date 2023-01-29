@@ -8,7 +8,9 @@ import {
   Panel,
   PanelHeading,
 } from "./MainComponents";
+import KeySelector from "./KeySelector";
 import Spinner from "./Spinner";
+import { DefaultButton } from "./Buttons";
 
 const LineGraphic = styled.div`
   svg {
@@ -24,10 +26,14 @@ const LineGraphic = styled.div`
 `;
 
 const DEFAULT_STATE = {
-  line: "",
-  artist: "",
-  song: "",
-  year: "",
+  line: {
+    line_id: null,
+    line_render: "",
+    artist: "",
+    song: "",
+    year: "",
+  },
+  selected_key: null,
 };
 
 export default class LineViewer extends React.Component {
@@ -47,34 +53,74 @@ export default class LineViewer extends React.Component {
       .then((response) => response.json())
       .then((data) => {
         this.setState({
-          line: data.line,
-          artist: data.artist,
-          song: data.song,
-          year: data.year,
+          line: {
+            id: data.id,
+            line_render: data.line,
+            artist: data.artist,
+            song: data.song,
+            year: data.year,
+          },
+          selected_key: data.key,
+        });
+      });
+  }
+
+  key_selected(key_str) {
+    this.setState((state) => DEFAULT_STATE);
+
+    let url =
+      "/api/generate?" +
+      new URLSearchParams({
+        id: this.state.line.id,
+        key: key_str,
+      }).toString();
+
+    fetch(url)
+      .then((response) => response.json())
+      .then((data) => {
+        this.setState({
+          line: {
+            id: data.id,
+            line_render: data.line,
+            artist: data.artist,
+            song: data.song,
+            year: data.year,
+          },
+          selected_key: data.key,
         });
       });
   }
 
   render() {
-    let info = this.state.artist;
-    if (this.state.song) {
-      info += " on " + this.state.song;
+    let info = this.state.line.artist;
+    if (this.state.line.song) {
+      info += " on " + this.state.line.song;
     }
-    if (this.state.year) {
-      info += " (" + this.state.year + ")";
+    if (this.state.line.year) {
+      info += " (" + this.state.line.year + ")";
     }
 
-    const line = this.state.line ? parse(this.state.line) : <Spinner />;
+    const line_view = this.state.line.line_render ? (
+      parse(this.state.line.line_render)
+    ) : (
+      <Spinner />
+    );
 
     return (
       <MainWrapper>
         <MainContent>
           <Panel>
             <PanelHeading>{info}</PanelHeading>
-            <LineGraphic id="line-graphic">{line}</LineGraphic>
-            <Button id="btn-generate" onClick={() => this.fetchLine()}>
+            {this.state.selected_key && (
+              <KeySelector
+                selected_key={this.state.selected_key}
+                onSelect={(key) => this.key_selected(key)}
+              />
+            )}
+            <LineGraphic id="line-graphic">{line_view}</LineGraphic>
+            <DefaultButton id="btn-generate" onClick={() => this.fetchLine()}>
               Give me another one!
-            </Button>
+            </DefaultButton>
           </Panel>
         </MainContent>
       </MainWrapper>

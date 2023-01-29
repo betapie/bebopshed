@@ -7,8 +7,8 @@ from .lily_builder import (
 
 
 class MusicRenderer:
-    def render(self, line: str, chords: str):
-        lily_string = self.create_lily_string(line, chords)
+    def render(self, line: str, chords: str, **kwargs):
+        lily_string = self.create_lily_string(line, chords, **kwargs)
         tmp_file = tempfile.NamedTemporaryFile("r", dir="tmp", suffix=".svg")
 
         proc = subprocess.Popen(
@@ -24,7 +24,7 @@ class MusicRenderer:
         tmp_file.close()
         return svg_content
 
-    def create_lily_string(self, line: str, chords: str):
+    def create_lily_string(self, line: str, chords: str, **kwargs):
         builder = LilyBuilder()
 
         builder.add(LilyCommand(
@@ -34,16 +34,26 @@ class MusicRenderer:
         builder.add(LilyCommand(
             "include", "\"lily_proc/lily_styles/jazzchords.ily\""))
 
+        music_expr = LilySimulExpression(
+            LilyExpression("chords", chords),
+            LilyExpression(
+                "new Staff",
+                LilyExpression("relative c", line)
+            )
+        )
+
+        if "transpose_from" in kwargs and "transpose_to" in kwargs:
+            from_key = kwargs["transpose_from"].lower()
+            to_key = kwargs["transpose_to"].lower()
+            music_expr = LilyExpression(
+                f"transpose {from_key} {to_key}",
+                music_expr
+            )
+
         builder.add(
             LilyExpression(
                 "score",
-                LilySimulExpression(
-                    LilyExpression("chords", chords),
-                    LilyExpression(
-                        "new Staff",
-                        LilyExpression("relative c", line)
-                    )
-                )
+                music_expr
             )
         )
 

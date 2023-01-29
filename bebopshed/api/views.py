@@ -13,18 +13,33 @@ def main(request):
     return HttpResponse('Welcome to bebopshed API')
 
 
-@api_view(['GET'])
+@api_view(["GET"])
 def generate_line(request):
     result = {}
-    count = Line.objects.count()
-    line = Line.objects.all()[random.randint(0, count-1)]
+    id = request.GET.get("id", None)
+    if id:
+        line = Line.objects.get(id=id)
+    else:
+        count = Line.objects.count()
+        line = Line.objects.all()[random.randint(0, count-1)]
+
+    kwargs = {}
+    key = request.GET.get("key", None)
+    if key:
+        kwargs["transpose_from"] = str(line.key).lower()
+        kwargs["transpose_to"] = key.lower()
+    else:
+        key = str(line.key).lower()
 
     renderer = MusicRenderer()
-    svg = renderer.render(line.line, line.chords)
+    svg = renderer.render(line.line, line.chords, **kwargs)
 
+    result["id"] = line.id
     result["line"] = svg
     result["artist"] = line.artist.name
     result["song"] = line.song
     result["year"] = line.year
+    result["original_key"] = str(line.key).lower()
+    result["key"] = key
 
     return Response(result)
