@@ -9,10 +9,12 @@ from .lily_builder import (
 class MusicRenderer:
     def render(self, line: str, chords: str, **kwargs):
         lily_string = self.create_lily_string(line, chords, **kwargs)
-        tmp_file = tempfile.NamedTemporaryFile("r", dir="tmp", suffix=".svg")
+        tmp_file = tempfile.NamedTemporaryFile(
+            "r", dir="tmp", suffix=".cropped.svg")
 
         proc = subprocess.Popen(
-            ["lilypond", "-o", tmp_file.name[:-4], "--svg", '-'],
+            ["lilypond", "-o", tmp_file.name[:-12],
+                "--svg", "-dno-print-pages", "-dcrop", '-'],
             stdin=subprocess.PIPE)
         try:
             proc.communicate(bytes(lily_string, "utf-8"))
@@ -37,8 +39,7 @@ class MusicRenderer:
         music_expr = LilySimulExpression(
             LilyExpression("chords", chords),
             LilyExpression(
-                "new Staff",
-                LilyExpression("relative c", line)
+                "new Staff", line
             )
         )
 

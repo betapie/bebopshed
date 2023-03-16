@@ -1,5 +1,9 @@
+import sys
+import os
+# TODO: Maybe use setuptools instead?
+sys.path.append(os.path.join(os.path.dirname(__file__), ".."))
 
-from .lily_builder import (
+from lily_proc.lily_builder import (
     LilyBuilder, LilyCommand, LilyExpression, LilySimulExpression
 )
 
