@@ -92,12 +92,15 @@ export default class LineViewer extends React.Component {
   }
 
   render() {
-    let info = this.state.line.artist;
-    if (this.state.line.song) {
-      info += " on " + this.state.line.song;
-    }
-    if (this.state.line.year) {
-      info += " (" + this.state.line.year + ")";
+    let heading = "Tuning Instruments..."
+    if (this.state.line.line_render) {
+      heading = `#${this.state.line.id}: ${this.state.line.artist}`;
+      if (this.state.line.song) {
+        heading += " on " + this.state.line.song;
+      }
+      if (this.state.line.year) {
+        heading += " (" + this.state.line.year + ")";
+      }
     }
 
     const line_view = this.state.line.line_render ? (
@@ -110,7 +113,7 @@ export default class LineViewer extends React.Component {
       <MainWrapper>
         <MainContent>
           <Panel>
-            <PanelHeading>{info}</PanelHeading>
+            <PanelHeading>{heading}</PanelHeading>
             {this.state.selected_key && (
               <KeySelector
                 selected_key={this.state.selected_key}
