@@ -79,8 +79,12 @@ WSGI_APPLICATION = 'bebopshed.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'NAME': decouple.config("DB_NAME"),
+        'USER': decouple.config("DB_USER"),
+        'PASSWORD': decouple.config("DB_PASSWORD"),
+        'HOST': 'localhost',
+        'PORT': ''
     }
 }
 
