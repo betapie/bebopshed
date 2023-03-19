@@ -29,23 +29,26 @@ class MusicRenderer:
     def create_lily_string(self, line: str, chords: str, **kwargs):
         builder = LilyBuilder()
 
-        builder.add(LilyCommand(
-            "include", "\"lily_proc/lily_styles/line.ily\""))
-        builder.add(LilyCommand(
-            "include", "\"lily_proc/lily_styles/lilyjazz.ily\""))
-        builder.add(LilyCommand(
-            "include", "\"lily_proc/lily_styles/jazzchords.ily\""))
+        builder.add(
+            LilyCommand("include", "\"lily_proc/lily_styles/line.ily\"")
+        ).add(
+            LilyCommand("include", "\"lily_proc/lily_styles/lilyjazz.ily\"")
+        ).add(
+            LilyCommand("include", "\"lily_proc/lily_styles/jazzchords.ily\"")
+        )
 
         music_expr = LilySimulExpression(
             LilyExpression("chords", chords),
-            LilyExpression(
-                "new Staff", line
-            )
+            LilyExpression("new Staff", line)
         )
 
         if "transpose_from" in kwargs and "transpose_to" in kwargs:
             from_key = kwargs["transpose_from"].lower()
             to_key = kwargs["transpose_to"].lower()
+            # TODO: find min max
+            # TODO: determine delta to-from
+            # TODO: if mean(min, max) > thresh octave lower
+            # TODO: if mean(min, max) < thresh octave higher
             music_expr = LilyExpression(
                 f"transpose {from_key} {to_key}",
                 music_expr

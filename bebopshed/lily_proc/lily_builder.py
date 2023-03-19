@@ -8,9 +8,11 @@ class LilyBuilder:
 
     def set_version(self, version):
         self.version = version
+        return self
 
     def add(self, *tokens):
         self._tokens += tokens
+        return self
 
     def dump(self) -> str:
         retval = f"\\version \"{self.version}\"\n"
