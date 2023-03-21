@@ -1,7 +1,6 @@
 import sys
 import os
 import unittest
-from fractions import Fraction
 
 # TODO: Maybe use setuptools instead?
 sys.path.append(os.path.join(os.path.dirname(__file__), ".."))
@@ -27,7 +26,7 @@ class TestNote(unittest.TestCase):
                 Pitch.C,
                 Accidental.NATURAL,
                 Octave.OCTAVE_4,
-                Duration(Fraction(1, 4)),
+                Duration(CommonDuration.QUARTER),
             ),
             "c'4",
         ),
@@ -36,7 +35,7 @@ class TestNote(unittest.TestCase):
                 Pitch.D,
                 Accidental.FLAT,
                 Octave.TWO_LINED,
-                Duration(Fraction(1, 8)),
+                Duration(CommonDuration.EIGTH),
             ),
             "des''8",
         ),
@@ -45,7 +44,7 @@ class TestNote(unittest.TestCase):
                 Pitch.D,
                 Accidental.SHARP,
                 Octave.SMALL,
-                Duration(Fraction(1, 8)),
+                Duration(CommonDuration.EIGTH),
             ),
             "dis8",
         ),
@@ -54,7 +53,7 @@ class TestNote(unittest.TestCase):
                 Pitch.E,
                 Accidental.FLAT,
                 Octave.GREAT,
-                Duration(Fraction(1, 8)),
+                Duration(CommonDuration.EIGTH),
             ),
             "ees,8",
         ),
@@ -72,7 +71,7 @@ class TestNote(unittest.TestCase):
                 Pitch.A,
                 Accidental.DOUBLE_FLAT,
                 Octave.GREAT,
-                Duration(Fraction(1, 8)),
+                Duration(CommonDuration.EIGTH),
             ),
             "aeses,8",
         ),
@@ -81,7 +80,7 @@ class TestNote(unittest.TestCase):
                 Pitch.G,
                 Accidental.SHARP,
                 Octave.ONE_LINED,
-                Duration(Fraction(1, 4), dots=2),
+                Duration(CommonDuration.QUARTER, dots=2),
             ),
             "gis'4..",
         ),
@@ -89,19 +88,19 @@ class TestNote(unittest.TestCase):
 
     def test_to_str(self):
         for note, string in self.CASES:
-            self.assertEqual(str(note), string)
+            self.assertEqual(note.to_lily(), string)
 
     def test_from_str(self):
         for note, string in self.CASES:
-            self.assertEqual(note, Note.from_str(string))
+            self.assertEqual(note, Note.from_lily(string))
 
     def test_from_str_to_str(self):
         for _, string in self.CASES:
-            self.assertEqual(string, str(Note.from_str(string)))
+            self.assertEqual(string, Note.from_lily(string).to_lily())
 
     def test_to_str_from_str(self):
         for note, _ in self.CASES:
-            self.assertEqual(note, Note.from_str(str(note)))
+            self.assertEqual(note, Note.from_lily(note.to_lily()))
 
 
 if __name__ == "__main__":

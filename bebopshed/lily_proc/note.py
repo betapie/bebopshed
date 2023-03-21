@@ -16,7 +16,14 @@ class Note:
         self.octave = octave
         self.duration = duration
 
-    def from_str(string: str):
+    def absolute_pitch(self) -> int:
+        return (
+            self.octave.value[0] * 12
+            + self.pitch.value[0]
+            + self.accidental.value[0]
+        )
+
+    def from_lily(string: str):
         reg_pattern = "^([cdefgab])(is|isis|es|eses)?(,*'*)([0-9]+)(\\.*)$"
         match = re.match(reg_pattern, string)
         groups = match.groups()
@@ -83,7 +90,7 @@ class Note:
 
         return Note(pitch, accidental, octave, duration)
 
-    def __str__(self):
+    def to_lily(self):
         result = ""
         if self.pitch == Pitch.C:
             result += "c"
@@ -130,7 +137,7 @@ class Note:
         elif self.octave in [Octave.OCTAVE_9, Octave.SIX_LINED]:
             result += "''''''"
 
-        result += str(self.duration.base_duration.denominator)
+        result += str(self.duration.base_duration.value[0])
         result += "." * self.duration.dots
 
         return result
