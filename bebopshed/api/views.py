@@ -36,10 +36,9 @@ def generate_line(request):
 
     result["id"] = line.id
     result["line"] = svg
-    result["artist"] = line.artist.name
-    result["song"] = line.song
-    result["year"] = line.year
     result["original_key"] = str(line.key).lower()
     result["key"] = key
+    result["prog_name"] = line.progression.common_name
+    result["prog_sequence"] = line.progression.sequence
 
     return Response(result)

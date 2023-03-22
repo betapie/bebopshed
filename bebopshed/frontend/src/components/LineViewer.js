@@ -29,9 +29,8 @@ const DEFAULT_STATE = {
   line: {
     line_id: null,
     line_render: "",
-    artist: "",
-    song: "",
-    year: "",
+    prog_sequence: "",
+    prog_name: ""
   },
   selected_key: null,
 };
@@ -56,9 +55,8 @@ export default class LineViewer extends React.Component {
           line: {
             id: data.id,
             line_render: data.line,
-            artist: data.artist,
-            song: data.song,
-            year: data.year,
+            prog_sequence: data.prog_sequence,
+            prog_name: data.prog_name
           },
           selected_key: data.key,
         });
@@ -82,9 +80,8 @@ export default class LineViewer extends React.Component {
           line: {
             id: data.id,
             line_render: data.line,
-            artist: data.artist,
-            song: data.song,
-            year: data.year,
+            prog_sequence: data.prog_sequence,
+            prog_name: data.prog_name
           },
           selected_key: data.key,
         });
@@ -94,13 +91,7 @@ export default class LineViewer extends React.Component {
   render() {
     let heading = "Tuning Instruments..."
     if (this.state.line.line_render) {
-      heading = `#${this.state.line.id}: ${this.state.line.artist}`;
-      if (this.state.line.song) {
-        heading += " on " + this.state.line.song;
-      }
-      if (this.state.line.year) {
-        heading += " (" + this.state.line.year + ")";
-      }
+      heading = `#${this.state.line.id}: ${this.state.line.prog_name}`;
     }
 
     const line_view = this.state.line.line_render ? (
