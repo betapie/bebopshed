@@ -1,4 +1,5 @@
 from fractions import Fraction
+import re
 from .music_token import BarLine, Tie
 from .note import Note
 from .line import Line
@@ -34,8 +35,9 @@ class LineParser:
             idx += 1
         return objects, idx
 
-    def sanitize(self, line_str: str):
+    def sanitize(self, line_str: str) -> str:
         result = ""
+        line_str = line_str.replace("\r", "")
         prev = "\n"
         is_command = False
         for c in line_str:
@@ -46,11 +48,15 @@ class LineParser:
                 next = c
             else:
                 if c == " " and prev != " ":
-                    next = " "
+                    continue
+                elif c == "\n" and prev == "\n":
+                    continue
                 elif c == "\\":
                     is_command = True
                     if prev != " " and prev != "\n":
                         result += " "
+                    next = c
+                elif c == "e" and prev in ["c", "d", "e", "f", "g", "a", "b"]:
                     next = c
                 elif c in [
                     "~",
@@ -64,6 +70,7 @@ class LineParser:
                     "g",
                     "a",
                     "b",
+                    "r",
                 ]:
                     if prev != " " and prev != "\n":
                         result += " "
@@ -76,4 +83,6 @@ class LineParser:
             result += next
             prev = next
 
+        regex = r"(\b[ea])(s)"
+        result = re.sub(regex, r"\1es", result)
         return result.strip()

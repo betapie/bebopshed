@@ -19,11 +19,11 @@ class TestNote(unittest.TestCase):
         cases = [
             (
                 "b'8 a'8 as'8 b8 d'8 f'8 e'8 e'16 es'16 |",
-                "b'8 a'8 as'8 b8 d'8 f'8 e'8 e'16 es'16 |",
+                "b'8 a'8 aes'8 b8 d'8 f'8 e'8 e'16 ees'16 |",
             ),
             (
-                "b'8a'8as'8b8d'8f'8e'8e'16es'16|",
-                "b'8 a'8 as'8 b8 d'8 f'8 e'8 e'16 es'16 |",
+                "es'8a'8as'8b8d'8f'8e'8e'16es'16|",
+                "ees'8 a'8 aes'8 b8 d'8 f'8 e'8 e'16 ees'16 |",
             ),
             (
                 "d'8 b8 \\tuplet 3/2 {c'8 e'8 g'8} b'4 d''8 e'8 ~ |",
@@ -34,7 +34,7 @@ class TestNote(unittest.TestCase):
                 "d'8 b8 \\tuplet 3/2 { c'8 e'8 g'8 } b'4 d''8 e'8 ~ |",
             ),
             (
-                "a4a4a4a4|a4a4a4a4~|a1",
+                "a4a4a4a4|\n\na4a4a4a4~|a1",
                 "a4 a4 a4 a4 |\na4 a4 a4 a4 ~ |\na1",
             ),
         ]

@@ -66,7 +66,7 @@ class Pitch:
         )
 
     def from_lily(string: str):
-        reg_pattern = "^([cdefgab])(is|isis|es|eses)?(,*'*)$"
+        reg_pattern = "^([cdefgab])(is|isis|s|ses|es|eses)?(,*'*)$"
         match = re.match(reg_pattern, string)
         groups = match.groups()
 
@@ -89,9 +89,9 @@ class Pitch:
             accidental = Accidental.SHARP
         elif groups[1] == "isis":
             accidental = Accidental.DOUBLE_SHARP
-        elif groups[1] == "es":
+        elif groups[1] in ["s", "es"]:
             accidental = Accidental.FLAT
-        elif groups[1] == "eses":
+        elif groups[1] in ["ses", "eses"]:
             accidental = Accidental.DOUBLE_FLAT
         else:
             accidental = Accidental.NATURAL
