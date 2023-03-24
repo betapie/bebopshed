@@ -1,6 +1,6 @@
 from fractions import Fraction
 import re
-from .music_token import BarLine, Tie
+from .music_object import BarLine, Tie, Rest
 from .note import Note
 from .line import Line
 from .tuplet import Tuplet
@@ -28,6 +28,8 @@ class LineParser:
                 objects.append(Tie())
             elif token == "|":
                 objects.append(BarLine())
+            elif token.startswith("r"):
+                objects.append(Rest.from_lily(token))
             else:
                 note = Note.from_lily(token)
                 if note:

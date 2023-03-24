@@ -1,13 +1,7 @@
-import sys
-import os
 import unittest
-
-# TODO: Maybe use setuptools instead?
-sys.path.append(os.path.join(os.path.dirname(__file__), ".."))
-
-from lily_proc.note import Note  # noqa: E402
-from lily_proc.pitch import Pitch, BasePitch, Accidental, Octave  # noqa: E402
-from lily_proc.duration import Duration, CommonDuration  # noqa: E402
+from lily_proc.note import Note
+from lily_proc.pitch import Pitch, BasePitch, Accidental, Octave
+from lily_proc.duration import Duration, CommonDuration
 
 
 class TestNote(unittest.TestCase):

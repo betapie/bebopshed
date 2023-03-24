@@ -1,4 +1,4 @@
-from .music_token import BarLine
+from .music_object import BarLine
 
 
 class Line:

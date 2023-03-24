@@ -1,8 +1,9 @@
+from .music_object import MusicObject
 from .pitch import Pitch
 from .duration import Duration
 
 
-class Note:
+class Note(MusicObject):
     def __init__(
         self,
         pitch: Pitch,

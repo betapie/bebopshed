@@ -1,65 +1,75 @@
-import sys
-import os
 import unittest
-
-# TODO: Maybe use setuptools instead?
-sys.path.append(os.path.join(os.path.dirname(__file__), ".."))
-
-from lily_proc.line import Line  # noqa: E402
-from lily_proc.note import Note  # noqa: E402
-from lily_proc.pitch import BasePitch, Accidental, Octave  # noqa: E402
-from lily_proc.duration import Duration, CommonDuration  # noqa: E402
+from lily_proc.line import Line
+from lily_proc.note import Note
+from lily_proc.pitch import Pitch, BasePitch, Accidental, Octave
+from lily_proc.duration import Duration, CommonDuration
 
 
 class TestLine(unittest.TestCase):
     def test_line(self):
         objects = [
             Note(
-                BasePitch.C,
-                Accidental.NATURAL,
-                Octave.TWO_LINED,
+                Pitch(
+                    BasePitch.C,
+                    Accidental.NATURAL,
+                    Octave.TWO_LINED,
+                ),
                 Duration(CommonDuration.EIGTH),
             ),
             Note(
-                BasePitch.G,
-                Accidental.NATURAL,
-                Octave.ONE_LINED,
+                Pitch(
+                    BasePitch.G,
+                    Accidental.NATURAL,
+                    Octave.ONE_LINED,
+                ),
                 Duration(CommonDuration.EIGTH),
             ),
             Note(
-                BasePitch.E,
-                Accidental.NATURAL,
-                Octave.ONE_LINED,
+                Pitch(
+                    BasePitch.E,
+                    Accidental.NATURAL,
+                    Octave.ONE_LINED,
+                ),
                 Duration(CommonDuration.EIGTH),
             ),
             Note(
-                BasePitch.C,
-                Accidental.NATURAL,
-                Octave.ONE_LINED,
+                Pitch(
+                    BasePitch.C,
+                    Accidental.NATURAL,
+                    Octave.ONE_LINED,
+                ),
                 Duration(CommonDuration.EIGTH),
             ),
             Note(
-                BasePitch.B,
-                Accidental.NATURAL,
-                Octave.ONE_LINED,
+                Pitch(
+                    BasePitch.B,
+                    Accidental.NATURAL,
+                    Octave.ONE_LINED,
+                ),
                 Duration(CommonDuration.EIGTH),
             ),
             Note(
-                BasePitch.B,
-                Accidental.FLAT,
-                Octave.ONE_LINED,
+                Pitch(
+                    BasePitch.B,
+                    Accidental.FLAT,
+                    Octave.ONE_LINED,
+                ),
                 Duration(CommonDuration.EIGTH),
             ),
             Note(
-                BasePitch.A,
-                Accidental.NATURAL,
-                Octave.ONE_LINED,
+                Pitch(
+                    BasePitch.A,
+                    Accidental.NATURAL,
+                    Octave.ONE_LINED,
+                ),
                 Duration(CommonDuration.EIGTH),
             ),
             Note(
-                BasePitch.A,
-                Accidental.FLAT,
-                Octave.ONE_LINED,
+                Pitch(
+                    BasePitch.A,
+                    Accidental.FLAT,
+                    Octave.ONE_LINED,
+                ),
                 Duration(CommonDuration.EIGTH),
             ),
         ]

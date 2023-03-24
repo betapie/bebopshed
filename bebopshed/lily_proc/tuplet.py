@@ -1,7 +1,8 @@
 from fractions import Fraction
+from .music_object import MusicObject
 
 
-class Tuplet:
+class Tuplet(MusicObject):
     def __init__(self, rational: Fraction, objects: list):
         self._rational = rational
         self._objects = objects
