@@ -9,6 +9,14 @@ class TestNote(unittest.TestCase):
         line = parser.parse(lily_str)
         self.assertEqual(line.to_lily(), parser.sanitize(lily_str))
 
+        lily_str = (
+            "d'8 bes8 a'8 fis'8 g'8 a'8 bes'8 c''8 |\n"
+            "des''8 ees''8 c''8 aes'8 e'8 des'8 c'8 bes8 |\n"
+            "a8 c'8 e'8 g'8 ~ g'8 f'8 e'8 c'8 |"
+        )
+        line = parser.parse(lily_str)
+        self.assertEqual(line.to_lily(), lily_str)
+
     def test_sanitize(self):
         cases = [
             (
