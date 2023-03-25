@@ -21,25 +21,15 @@ class Accidental(Enum):
 
 
 class Octave(Enum):
-    OCTAVE_0 = 0
     SUB_CONTRA = 0
-    OCTAVE_1 = 1
     CONTRA = 1
-    OCTAVE_2 = 2
     GREAT = 2
-    OCTAVE_3 = 3
     SMALL = 3
-    OCTAVE_4 = 4
     ONE_LINED = 4
-    OCTAVE_5 = 5
     TWO_LINED = 5
-    OCTAVE_6 = 6
     THREE_LINED = 6
-    OCTAVE_7 = 7
     FOUR_LINED = 7
-    OCTAVE_8 = 8
     FIVE_LINED = 8
-    OCTAVE_9 = 9
     SIX_LINED = 9
 
 
@@ -60,9 +50,9 @@ class Pitch:
 
     def absolute_pitch(self) -> int:
         return (
-            self.octave.value[0] * 12
-            + self.base_pitch.value[0]
-            + self.accidental.value[0]
+            self.octave.value * 12
+            + self.base_pitch.value
+            + self.accidental.value
         )
 
     def from_lily(string: str):
@@ -145,25 +135,25 @@ class Pitch:
         elif self.accidental == Accidental.DOUBLE_FLAT:
             result += "eses"
 
-        if self.octave in [Octave.OCTAVE_0, Octave.SUB_CONTRA]:
+        if self.octave == Octave.SUB_CONTRA:
             result += ",,,"
-        elif self.octave in [Octave.OCTAVE_1, Octave.CONTRA]:
+        elif self.octave == Octave.CONTRA:
             result += ",,"
-        elif self.octave in [Octave.OCTAVE_2, Octave.GREAT]:
+        elif self.octave == Octave.GREAT:
             result += ","
-        elif self.octave in [Octave.OCTAVE_3, Octave.SMALL]:
+        elif self.octave == Octave.SMALL:
             pass
-        elif self.octave in [Octave.OCTAVE_4, Octave.ONE_LINED]:
+        elif self.octave == Octave.ONE_LINED:
             result += "'"
-        elif self.octave in [Octave.OCTAVE_5, Octave.TWO_LINED]:
+        elif self.octave == Octave.TWO_LINED:
             result += "''"
-        elif self.octave in [Octave.OCTAVE_6, Octave.THREE_LINED]:
+        elif self.octave == Octave.THREE_LINED:
             result += "'''"
-        elif self.octave in [Octave.OCTAVE_7, Octave.FOUR_LINED]:
+        elif self.octave == Octave.FOUR_LINED:
             result += "''''"
-        elif self.octave in [Octave.OCTAVE_8, Octave.FIVE_LINED]:
+        elif self.octave == Octave.FIVE_LINED:
             result += "'''''"
-        elif self.octave in [Octave.OCTAVE_9, Octave.SIX_LINED]:
+        elif self.octave == Octave.SIX_LINED:
             result += "''''''"
 
         return result
