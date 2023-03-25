@@ -15,7 +15,7 @@ class TestNote(unittest.TestCase):
         ),
         (
             Note(
-                Pitch(BasePitch.C, Accidental.NATURAL, Octave.OCTAVE_4),
+                Pitch(BasePitch.C, Accidental.NATURAL, Octave.ONE_LINED),
                 Duration(CommonDuration.QUARTER),
             ),
             "c'4",

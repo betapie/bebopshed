@@ -4,15 +4,17 @@ from .music_object import BarLine, Tie, Rest
 from .note import Note
 from .line import Line
 from .tuplet import Tuplet
+from .duration import CommonDuration, Duration
 
 
 class LineParser:
     def parse(self, line: str):
         tokens = self.sanitize(line).split()
-        objects, _ = self._parse_tokens(tokens, 0)
+        last_base_duration = CommonDuration.QUARTER
+        objects, _ = self._parse_tokens(tokens, 0, last_base_duration)
         return Line(objects)
 
-    def _parse_tokens(self, tokens, idx):
+    def _parse_tokens(self, tokens, idx, last_common_duration):
         objects = []
 
         while idx < len(tokens):
@@ -22,18 +24,26 @@ class LineParser:
             elif token == "\\tuplet":
                 rational = Fraction(tokens[idx + 1])
                 # TODO assert tokens[idx + 2] == '{'
-                tuplet_objects, idx = self._parse_tokens(tokens, idx + 3)
+                tuplet_objects, idx = self._parse_tokens(
+                    tokens, idx + 3, last_common_duration
+                )
                 objects.append(Tuplet(rational, tuplet_objects))
             elif token == "~":
                 objects.append(Tie())
             elif token == "|":
                 objects.append(BarLine())
             elif token.startswith("r"):
-                objects.append(Rest.from_lily(token))
+                rest = Rest.from_lily(token)
+                if not rest.duration:
+                    rest = Rest(Duration(last_common_duration))
+                last_common_duration = rest.duration.base_duration
+                objects.append(rest)
             else:
                 note = Note.from_lily(token)
-                if note:
-                    objects.append(note)
+                if not note.duration:
+                    note.duration = Duration(last_common_duration)
+                last_common_duration = note.duration.base_duration
+                objects.append(note)
             idx += 1
         return objects, idx
 

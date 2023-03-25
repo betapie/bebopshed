@@ -8,6 +8,7 @@ class CommonDuration(Enum):
     QUARTER = (4,)
     EIGTH = (8,)
     SIXTEENTH = (16,)
+    THIRTYSECOND = (32,)
 
 
 class Duration:
@@ -22,6 +23,8 @@ class Duration:
         )
 
     def from_lily(string: str):
+        if not string:
+            return None
         reg_pattern = "^([0-9]+)(\\.*)$"
         match = re.match(reg_pattern, string)
         groups = match.groups()
@@ -38,6 +41,8 @@ class Duration:
             common_duration = CommonDuration.EIGTH
         elif groups[0] == "16":
             common_duration = CommonDuration.SIXTEENTH
+        elif groups[0] == "32":
+            common_duration = CommonDuration.THIRTYSECOND
 
         return Duration(common_duration, dots)
 
