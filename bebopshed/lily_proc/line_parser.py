@@ -97,4 +97,7 @@ class LineParser:
 
         regex = r"(\b[ea])(s)"
         result = re.sub(regex, r"\1es", result)
-        return result.strip()
+        result = result.strip()
+        if result[-1] != "|":
+            result += " |"
+        return result

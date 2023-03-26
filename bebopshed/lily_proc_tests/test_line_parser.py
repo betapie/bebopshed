@@ -37,11 +37,11 @@ class TestNote(unittest.TestCase):
             ),
             (
                 "a4a4a4a4|\n\na4a4a4a4~|a1",
-                "a4 a4 a4 a4 |\na4 a4 a4 a4 ~ |\na1",
+                "a4 a4 a4 a4 |\na4 a4 a4 a4 ~ |\na1 |",
             ),
             (
                 "a4a4a8r4.|\n\na4a4r2~|a1",
-                "a4 a4 a8 r4. |\na4 a4 r2 ~ |\na1",
+                "a4 a4 a8 r4. |\na4 a4 r2 ~ |\na1 |",
             ),
         ]
         parser = LineParser()

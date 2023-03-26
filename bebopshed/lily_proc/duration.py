@@ -3,12 +3,12 @@ import re
 
 
 class CommonDuration(Enum):
-    WHOLE = (1,)
-    HALF = (2,)
-    QUARTER = (4,)
-    EIGTH = (8,)
-    SIXTEENTH = (16,)
-    THIRTYSECOND = (32,)
+    WHOLE = 1
+    HALF = 2
+    QUARTER = 4
+    EIGTH = 8
+    SIXTEENTH = 16
+    THIRTYSECOND = 32
 
 
 class Duration:
@@ -48,6 +48,6 @@ class Duration:
 
     def to_lily(self):
         result = ""
-        result += str(self.base_duration.value[0])
+        result += str(self.base_duration.value)
         result += "." * self.dots
         return result
