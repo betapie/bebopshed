@@ -157,3 +157,78 @@ class Pitch:
             result += "''''''"
 
         return result
+
+
+class Key:
+    def __init__(
+        self, pitch: BasePitch, accidental: Accidental
+    ):
+        self.base_pitch = pitch
+        self.accidental = accidental
+
+    def __eq__(self, other):
+        return (
+            self.base_pitch == other.base_pitch
+            and self.accidental == other.accidental
+        )
+
+    def from_lily(string: str):
+        reg_pattern = "^([cdefgab])(is|isis|s|ses|es|eses)?$"
+        match = re.match(reg_pattern, string)
+        groups = match.groups()
+
+        if groups[0] == "c":
+            base_pitch = BasePitch.C
+        elif groups[0] == "d":
+            base_pitch = BasePitch.D
+        elif groups[0] == "e":
+            base_pitch = BasePitch.E
+        elif groups[0] == "f":
+            base_pitch = BasePitch.F
+        elif groups[0] == "g":
+            base_pitch = BasePitch.G
+        elif groups[0] == "a":
+            base_pitch = BasePitch.A
+        elif groups[0] == "b":
+            base_pitch = BasePitch.B
+
+        if groups[1] == "is":
+            accidental = Accidental.SHARP
+        elif groups[1] == "isis":
+            accidental = Accidental.DOUBLE_SHARP
+        elif groups[1] in ["s", "es"]:
+            accidental = Accidental.FLAT
+        elif groups[1] in ["ses", "eses"]:
+            accidental = Accidental.DOUBLE_FLAT
+        else:
+            accidental = Accidental.NATURAL
+
+        return Key(base_pitch, accidental)
+
+    def to_lily(self):
+        result = ""
+        if self.base_pitch == BasePitch.C:
+            result += "c"
+        elif self.base_pitch == BasePitch.D:
+            result += "d"
+        elif self.base_pitch == BasePitch.E:
+            result += "e"
+        elif self.base_pitch == BasePitch.F:
+            result += "f"
+        elif self.base_pitch == BasePitch.G:
+            result += "g"
+        elif self.base_pitch == BasePitch.A:
+            result += "a"
+        elif self.base_pitch == BasePitch.B:
+            result += "b"
+
+        if self.accidental == Accidental.SHARP:
+            result += "is"
+        elif self.accidental == Accidental.DOUBLE_SHARP:
+            result += "isis"
+        elif self.accidental == Accidental.FLAT:
+            result += "es"
+        elif self.accidental == Accidental.DOUBLE_FLAT:
+            result += "eses"
+
+        return result

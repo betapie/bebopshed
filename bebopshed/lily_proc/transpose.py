@@ -1,6 +1,7 @@
 import copy
+from enum import Enum
 from .music_object import MusicObject
-from .pitch import Pitch, BasePitch, Accidental, Octave
+from .pitch import Pitch, Key, BasePitch, Accidental, Octave
 from .note import Note
 from .tuplet import Tuplet
 from .line import Line
@@ -79,3 +80,83 @@ class PitchTransposer:
     def _transpose_line(self, line: Line) -> Line:
         objects = [self.transpose(obj) for obj in line._objects]
         return Line(objects)
+
+
+class KeyTransposeStrategy(Enum):
+    AUTO = 0
+    UP = 1
+    DOWN = 2
+
+
+class KeyTransposer:
+    BASE_PITCHES = [
+        BasePitch.C,
+        BasePitch.D,
+        BasePitch.E,
+        BasePitch.F,
+        BasePitch.G,
+        BasePitch.A,
+        BasePitch.B,
+    ]
+    NUM_BASE_PITCHES = 7
+
+    def __init__(
+        self, from_key: Key, to_key: Key, strategy=KeyTransposeStrategy.AUTO
+    ):
+        self.from_key = from_key
+        self.to_key = to_key
+        self.strategy = strategy
+
+    def transpose(self, object: MusicObject):
+        from_pitch = Pitch(
+            self.from_key.base_pitch,
+            self.from_key.accidental,
+            Octave.ONE_LINED,
+        )
+        to_pitch = Pitch(
+            self.to_key.base_pitch,
+            self.to_key.accidental,
+            Octave.ONE_LINED
+        )
+        delta = to_pitch.absolute_pitch() - from_pitch.absolute_pitch()
+        if self.strategy == KeyTransposeStrategy.UP and delta < 0:
+            to_pitch.octave = Octave(to_pitch.octave.value - 1)
+        elif self.strategy == KeyTransposeStrategy.DOWN and delta > 0:
+            to_pitch.octave = Octave(to_pitch.octave.value + 1)
+        else:  # AUTO
+            min_pitch, max_pitch = self._min_max_pitch(object)
+            mean_abs_pitch = (
+                max_pitch.absolute_pitch() + min_pitch.absolute_pitch()
+            ) / 2
+            pivot = Pitch(
+                BasePitch.B, Accidental.FLAT, Octave.ONE_LINED
+            ).absolute_pitch()
+            if delta < 0:
+                if pivot - (mean_abs_pitch + delta) > 6:
+                    to_pitch.octave = Octave(to_pitch.octave.value + 1)
+            elif delta > 0:
+                if mean_abs_pitch + delta - pivot > 6:
+                    to_pitch.octave = Octave(to_pitch.octave.value - 1)
+
+        pitch_transposer = PitchTransposer(from_pitch, to_pitch)
+        return pitch_transposer.transpose(object)
+
+    def _min_max_pitch(self, object: MusicObject) -> tuple:
+        pitches = self._collect_pitches(object)
+        min_pitch, max_pitch = None, None
+        for pitch in pitches:
+            abs_pitch = pitch.absolute_pitch()
+            if not min_pitch or abs_pitch < min_pitch.absolute_pitch():
+                min_pitch = pitch
+            if not max_pitch or abs_pitch > max_pitch.absolute_pitch():
+                max_pitch = pitch
+        return min_pitch, max_pitch
+
+    def _collect_pitches(self, object: MusicObject) -> list:
+        pitches = []
+        if isinstance(object, Note):
+            pitches.append(object.pitch)
+        elif isinstance(object, Line) or isinstance(object, Tuplet):
+            for obj in object._objects:
+                pitches.extend(self._collect_pitches(obj))
+        return pitches

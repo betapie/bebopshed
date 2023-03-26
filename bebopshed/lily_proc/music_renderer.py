@@ -4,10 +4,14 @@ import tempfile
 from .lily_builder import (
     LilyBuilder, LilyCommand, LilyExpression, LilySimulExpression
 )
+from .line_parser import LineParser
+from .pitch import Key
+from .transpose import KeyTransposer
 
 
 class MusicRenderer:
     def render(self, line: str, chords: str, **kwargs):
+        # TODO: handle errors in lily string creation
         lily_string = self.create_lily_string(line, chords, **kwargs)
         tmp_file = tempfile.NamedTemporaryFile(
             "r", dir="tmp", suffix=".cropped.svg")
@@ -37,22 +41,26 @@ class MusicRenderer:
             LilyCommand("include", "\"lily_proc/lily_styles/jazzchords.ily\"")
         )
 
-        music_expr = LilySimulExpression(
-            LilyExpression("chords", chords),
-            LilyExpression("new Staff", line)
-        )
-
+        parser = LineParser()
+        line = parser.parse(line)
         if "transpose_from" in kwargs and "transpose_to" in kwargs:
+            orig_key = Key.from_lily(kwargs["transpose_from"])
+            target_key = Key.from_lily(kwargs["transpose_to"])
+            transposer = KeyTransposer(orig_key, target_key)
+            line = transposer.transpose(line)
             from_key = kwargs["transpose_from"].lower()
             to_key = kwargs["transpose_to"].lower()
-            # TODO: find min max
-            # TODO: determine delta to-from
-            # TODO: if mean(min, max) > thresh octave lower
-            # TODO: if mean(min, max) < thresh octave higher
-            music_expr = LilyExpression(
+            chords_expr = LilyExpression(
                 f"transpose {from_key} {to_key}",
-                music_expr
+                LilyExpression("chords", chords)
             )
+        else:
+            chords_expr = LilyExpression("chords", chords)
+        line = line.to_lily()
+        music_expr = LilySimulExpression(
+            chords_expr,
+            LilyExpression("new Staff", line)
+        )
 
         builder.add(
             LilyExpression(
