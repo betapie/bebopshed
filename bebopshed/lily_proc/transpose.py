@@ -6,7 +6,7 @@ from .tuplet import Tuplet
 from .line import Line
 
 
-class Transposer:
+class PitchTransposer:
     BASE_PITCHES = [
         BasePitch.C,
         BasePitch.D,
