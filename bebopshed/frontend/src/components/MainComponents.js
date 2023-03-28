@@ -22,6 +22,7 @@ const Panel = styled.div`
   padding: 5%;
   border: 2px solid ${colors.lightAccent};
   width: 100%;
+  min-width: 300px;
   justify-content: center;
   align-items: center;
   text-align: center;

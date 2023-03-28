@@ -1,14 +1,14 @@
 import React from "react";
 import styled from "styled-components";
 import parse from "html-react-parser";
-import { Button } from "react-bootstrap";
 import {
   MainWrapper,
   MainContent,
   Panel,
   PanelHeading,
 } from "./MainComponents";
-import KeySelector from "./KeySelector";
+// import KeySelector from "./KeySelector";
+import KeySelector2 from "./KeySelector2";
 import Spinner from "./Spinner";
 import { DefaultButton } from "./Buttons";
 
@@ -27,12 +27,13 @@ const LineGraphic = styled.div`
 
 const DEFAULT_STATE = {
   line: {
-    line_id: null,
-    line_render: "",
-    prog_sequence: "",
-    prog_name: ""
+    id: null,
+    lineRender: "",
+    progSequence: "",
+    progName: "",
   },
-  selected_key: null,
+  keyBasepitch: null,
+  keyAccidental: null,
 };
 
 export default class LineViewer extends React.Component {
@@ -54,23 +55,25 @@ export default class LineViewer extends React.Component {
         this.setState({
           line: {
             id: data.id,
-            line_render: data.line,
-            prog_sequence: data.prog_sequence,
-            prog_name: data.prog_name
+            lineRender: data.line,
+            progSequence: data.prog_sequence,
+            progName: data.prog_name,
           },
-          selected_key: data.key,
+          keyBasepitch: data.key_basepitch,
+          keyAccidental: data.key_accidental,
         });
       });
   }
 
-  key_selected(key_str) {
+  transpose(keyBasePitch, keyAccidental) {
     this.setState((state) => DEFAULT_STATE);
 
     let url =
       "/api/generate?" +
       new URLSearchParams({
         id: this.state.line.id,
-        key: key_str,
+        key_basepitch: keyBasePitch,
+        key_accidental: keyAccidental
       }).toString();
 
     fetch(url)
@@ -79,23 +82,24 @@ export default class LineViewer extends React.Component {
         this.setState({
           line: {
             id: data.id,
-            line_render: data.line,
-            prog_sequence: data.prog_sequence,
-            prog_name: data.prog_name
+            lineRender: data.line,
+            progSequence: data.prog_sequence,
+            progName: data.prog_name,
           },
-          selected_key: data.key,
+          keyBasepitch: data.key_basepitch,
+          keyAccidental: data.key_accidental
         });
       });
   }
 
   render() {
-    let heading = "Tuning Instruments..."
-    if (this.state.line.line_render) {
-      heading = `#${this.state.line.id}: ${this.state.line.prog_name}`;
+    let heading = "Tuning Instruments...";
+    if (this.state.line.lineRender) {
+      heading = `#${this.state.line.id}: ${this.state.line.progName}`;
     }
 
-    const line_view = this.state.line.line_render ? (
-      parse(this.state.line.line_render)
+    const line_view = this.state.line.lineRender ? (
+      parse(this.state.line.lineRender)
     ) : (
       <Spinner />
     );
@@ -105,12 +109,15 @@ export default class LineViewer extends React.Component {
         <MainContent>
           <Panel>
             <PanelHeading>{heading}</PanelHeading>
-            {this.state.selected_key && (
-              <KeySelector
-                selected_key={this.state.selected_key}
-                onSelect={(key) => this.key_selected(key)}
-              />
-            )}
+            {this.state.keyBasepitch && (
+                <KeySelector2
+                  keyBasePitch={this.state.keyBasepitch}
+                  keyAccidental={this.state.keyAccidental}
+                  onClickedTranspose={(basePitch, accidental) =>
+                    this.transpose(basePitch, accidental)
+                  }
+                />
+              )}
             <LineGraphic id="line-graphic">{line_view}</LineGraphic>
             <DefaultButton id="btn-generate" onClick={() => this.fetchLine()}>
               Give me another one!
