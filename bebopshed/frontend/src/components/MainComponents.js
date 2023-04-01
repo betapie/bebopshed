@@ -33,4 +33,9 @@ const PanelHeading = styled.div`
   font-size: larger;
 `;
 
-export { MainWrapper, MainContent, Panel, PanelHeading };
+const TextDiv = styled.div`
+  color: var(--txt-color);
+  padding: 5px;
+`
+
+export { MainWrapper, MainContent, Panel, PanelHeading, TextDiv };
