@@ -5,6 +5,7 @@ from .pitch import Pitch, Key, BasePitch, Accidental, Octave
 from .note import Note
 from .tuplet import Tuplet
 from .line import Line
+from .chord import Chord, Chords
 
 
 class PitchTransposer:
@@ -30,12 +31,18 @@ class PitchTransposer:
     def transpose(self, object: MusicObject):
         if isinstance(object, Pitch):
             return self._transpose_pitch(object)
+        if isinstance(object, Key):
+            return self._transpose_key(object)
         if isinstance(object, Note):
             return self._transpose_note(object)
+        if isinstance(object, Chord):
+            return self._transpose_chord(object)
         if isinstance(object, Tuplet):
             return self._transpose_tuplet(object)
         if isinstance(object, Line):
             return self._transpose_line(object)
+        if isinstance(object, Chords):
+            return self._transpose_chords(object)
         # object does not need to be transposed
         return copy.deepcopy(object)
 
@@ -67,10 +74,19 @@ class PitchTransposer:
 
         return Pitch(base_pitch, Accidental(acc_delta), Octave(octave))
 
+    def _transpose_key(self, key: Key) -> Key:
+        pitch = Pitch(key.base_pitch, key.accidental, Octave.ONE_LINED)
+        transposed = self._transpose_pitch(pitch)
+        return Key(transposed.base_pitch, transposed.accidental)
+
     def _transpose_note(self, note: Note) -> Note:
         pitch = self._transpose_pitch(note.pitch)
         duration = copy.deepcopy(note.duration)
         return Note(pitch, duration)
+
+    def _transpose_chord(self, chord: Chord) -> Chord:
+        key = self._transpose_key(chord.key)
+        return Chord(key, chord.duration, chord.quality, chord.decorators)
 
     def _transpose_tuplet(self, tuplet: Tuplet) -> Tuplet:
         objects = [self.transpose(obj) for obj in tuplet._objects]
@@ -80,6 +96,10 @@ class PitchTransposer:
     def _transpose_line(self, line: Line) -> Line:
         objects = [self.transpose(obj) for obj in line._objects]
         return Line(objects)
+
+    def _transpose_chords(self, chords: Chords) -> Chords:
+        objects = [self.transpose(obj) for obj in chords._objects]
+        return Chords(objects)
 
 
 class KeyTransposeStrategy(Enum):
@@ -125,18 +145,19 @@ class KeyTransposer:
             to_pitch.octave = Octave(to_pitch.octave.value + 1)
         else:  # AUTO
             min_pitch, max_pitch = self._min_max_pitch(object)
-            mean_abs_pitch = (
-                max_pitch.absolute_pitch() + min_pitch.absolute_pitch()
-            ) / 2
-            pivot = Pitch(
-                BasePitch.B, Accidental.FLAT, Octave.ONE_LINED
-            ).absolute_pitch()
-            if delta < 0:
-                if pivot - (mean_abs_pitch + delta) > 6:
-                    to_pitch.octave = Octave(to_pitch.octave.value + 1)
-            elif delta > 0:
-                if mean_abs_pitch + delta - pivot > 6:
-                    to_pitch.octave = Octave(to_pitch.octave.value - 1)
+            if min_pitch and max_pitch:
+                mean_abs_pitch = (
+                    max_pitch.absolute_pitch() + min_pitch.absolute_pitch()
+                ) / 2
+                pivot = Pitch(
+                    BasePitch.B, Accidental.FLAT, Octave.ONE_LINED
+                ).absolute_pitch()
+                if delta < 0:
+                    if pivot - (mean_abs_pitch + delta) > 6:
+                        to_pitch.octave = Octave(to_pitch.octave.value + 1)
+                elif delta > 0:
+                    if mean_abs_pitch + delta - pivot > 6:
+                        to_pitch.octave = Octave(to_pitch.octave.value - 1)
 
         pitch_transposer = PitchTransposer(from_pitch, to_pitch)
         return pitch_transposer.transpose(object)
