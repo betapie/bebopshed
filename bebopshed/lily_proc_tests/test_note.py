@@ -64,19 +64,19 @@ class TestNote(unittest.TestCase):
         ),
     ]
 
-    def test_to_str(self):
+    def test_to_lily(self):
         for note, string in self.CASES:
             self.assertEqual(note.to_lily(), string)
 
-    def test_from_str(self):
+    def test_from_lily(self):
         for note, string in self.CASES:
             self.assertEqual(note, Note.from_lily(string))
 
-    def test_from_str_to_str(self):
+    def test_from_lily_to_lily(self):
         for _, string in self.CASES:
             self.assertEqual(string, Note.from_lily(string).to_lily())
 
-    def test_to_str_from_str(self):
+    def test_to_lily_from_lily(self):
         for note, _ in self.CASES:
             self.assertEqual(note, Note.from_lily(note.to_lily()))
 
