@@ -14,6 +14,11 @@ class BarLine(MusicObject):
         return "|"
 
 
+class Break(MusicObject):
+    def to_lily(self):
+        return " \\break "
+
+
 class Tie(MusicObject):
     def to_lily(self):
         return "~"
