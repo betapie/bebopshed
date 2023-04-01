@@ -6,8 +6,7 @@ from .lily_builder import (
 )
 from .line_parser import LineParser
 from .chord import Chords
-from .pitch import Key
-from .transpose import KeyTransposer
+from .line_processing import LineProcessor
 
 
 class MusicRenderer:
@@ -46,12 +45,8 @@ class MusicRenderer:
         line = parser.parse(line)
         print(chords)
         chords = Chords.from_lily(chords)
-        if "transpose_from" in kwargs and "transpose_to" in kwargs:
-            orig_key = Key.from_lily(kwargs["transpose_from"])
-            target_key = Key.from_lily(kwargs["transpose_to"])
-            transposer = KeyTransposer(orig_key, target_key)
-            line = transposer.transpose(line)
-            chords = transposer.transpose(chords)
+        line, chords = LineProcessor.process(line, chords, **kwargs)
+
         music_expr = LilySimulExpression(
             LilyExpression("chords", chords.to_lily()),
             LilyExpression("new Staff", line.to_lily())
