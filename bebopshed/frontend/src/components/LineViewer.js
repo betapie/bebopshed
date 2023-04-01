@@ -8,7 +8,7 @@ import {
   PanelHeading,
 } from "./MainComponents";
 // import KeySelector from "./KeySelector";
-import KeySelector2 from "./KeySelector2";
+import ProcessingMenu from "./ProcessingMenu";
 import Spinner from "./Spinner";
 import { DefaultButton } from "./Buttons";
 
@@ -42,14 +42,14 @@ export default class LineViewer extends React.Component {
     this.state = DEFAULT_STATE;
   }
 
-  componentDidMount() {
-    this.fetchLine();
-  }
-
-  fetchLine() {
-    console.log("fetching new line...");
+  executeLineFetch(endpoint, queryParams) {
+    let url = endpoint;
+    if (queryParams) {
+      url += "?" + new URLSearchParams(queryParams).toString();
+    }
+    console.log("executing fetch line query at url \'" + url + "\'")
     this.setState((state) => DEFAULT_STATE);
-    fetch("/api/generate")
+    fetch(url)
       .then((response) => response.json())
       .then((data) => {
         this.setState({
@@ -65,31 +65,22 @@ export default class LineViewer extends React.Component {
       });
   }
 
-  transpose(keyBasePitch, keyAccidental) {
-    this.setState((state) => DEFAULT_STATE);
+  componentDidMount() {
+    this.fetchLine();
+  }
 
-    let url =
-      "/api/generate?" +
-      new URLSearchParams({
-        id: this.state.line.id,
-        key_basepitch: keyBasePitch,
-        key_accidental: keyAccidental
-      }).toString();
+  fetchLine() {
+    this.executeLineFetch("/api/generate")
+  }
 
-    fetch(url)
-      .then((response) => response.json())
-      .then((data) => {
-        this.setState({
-          line: {
-            id: data.id,
-            lineRender: data.line,
-            progSequence: data.prog_sequence,
-            progName: data.prog_name,
-          },
-          keyBasepitch: data.key_basepitch,
-          keyAccidental: data.key_accidental
-        });
-      });
+  chopsBuilder(startKeyBasePitch, startKeyAccidental, deltaKey) {
+    let queryParams = {
+      id: this.state.line.id,
+      key_basepitch: startKeyBasePitch,
+      key_accidental: startKeyAccidental,
+      delta_key: deltaKey
+    };
+    this.executeLineFetch("/api/chops_builder", queryParams)
   }
 
   render() {
@@ -110,11 +101,12 @@ export default class LineViewer extends React.Component {
           <Panel>
             <PanelHeading>{heading}</PanelHeading>
             {this.state.keyBasepitch && (
-                <KeySelector2
+                <ProcessingMenu
+                  lineId={this.state.line.id}
                   keyBasePitch={this.state.keyBasepitch}
                   keyAccidental={this.state.keyAccidental}
-                  onClickedTranspose={(basePitch, accidental) =>
-                    this.transpose(basePitch, accidental)
+                  executeLineFetch={(endpoint, queryParams) =>
+                    this.executeLineFetch(endpoint, queryParams)
                   }
                 />
               )}
