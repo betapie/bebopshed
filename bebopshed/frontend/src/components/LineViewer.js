@@ -7,7 +7,7 @@ import {
   Panel,
   PanelHeading,
 } from "./MainComponents";
-// import KeySelector from "./KeySelector";
+import colors from "../style/ColorPalette";
 import ProcessingMenu from "./ProcessingMenu";
 import Spinner from "./Spinner";
 import { DefaultButton } from "./Buttons";
@@ -17,9 +17,10 @@ const LineGraphic = styled.div`
     width: 100%;
     max-width: 100%;
     height: 100%;
-    border: 2px solid var(--txt-color);
+    border: 2px solid ${colors.text};
     border-radius: 5px;
-    background-color: var(--txt-color);
+    background-color: ${colors.text};
+    color: ${colors.accent};
     margin-top: 20px;
     margin-bottom: 20px;
   }

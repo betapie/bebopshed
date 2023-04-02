@@ -7,12 +7,13 @@ const MainWrapper = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
-  min-height: calc(100vh - 58px);
+  min-height: calc(100vh - 58px - 40px);
 `;
 
 const MainContent = styled.div`
   width: 100%;
-  max-width: 1000px;
+  max-width: 1100px;
+  padding: 5px;
 `;
 
 const Panel = styled.div`
@@ -26,16 +27,15 @@ const Panel = styled.div`
   justify-content: center;
   align-items: center;
   text-align: center;
+  color: ${colors.text};
 `;
 
 const PanelHeading = styled.div`
-  color: var(--txt-color);
   font-size: larger;
 `;
 
 const TextDiv = styled.div`
-  color: var(--txt-color);
   padding: 5px;
-`
+`;
 
 export { MainWrapper, MainContent, Panel, PanelHeading, TextDiv };
