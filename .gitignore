@@ -106,5 +106,9 @@ dist
 # frontend static output files
 bebopshed/frontend/static/frontend/
 
+# frontend django static files
+bebopshed/frontend/static/admin
+bebopshed/frontend/static/rest_framework
+
 __pycache__
 db.sqlite3
