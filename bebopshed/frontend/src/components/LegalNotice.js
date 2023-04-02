@@ -19,6 +19,7 @@ const LegalNotice = () => {
               Manuel Lauterbach <br />
               Grüner Weg 8 <br />
               34117 Kassel <br />
+              Germany <br />
               ma.lauterbach@gmail.com
             </p>
             <h3>Liability for Content</h3>

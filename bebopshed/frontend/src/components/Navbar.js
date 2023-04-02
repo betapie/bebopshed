@@ -41,9 +41,9 @@ function Navbar() {
         <BootstrapNavbar.Collapse id="responsive-navbar-nav">
           <Nav className="me-auto"></Nav>
           <Nav>
-            <Nav.Link as={Link} to="/about">
+            {/* <Nav.Link as={Link} to="/about">
               About
-            </Nav.Link>
+            </Nav.Link> */}
             <Nav.Link as={Link} to="/contribute">
               Contribute
             </Nav.Link>

@@ -14,7 +14,7 @@ function App() {
       <Navbar />
       <Routes>
         <Route path="/" element={<LineViewer />} />
-        <Route path="/about" element={<About />} />
+        {/* <Route path="/about" element={<About />} /> */}
         <Route path="/contribute" element={<Contribute />} />
         <Route path="/legal_notice" element={<LegalNotice />} />
       </Routes>

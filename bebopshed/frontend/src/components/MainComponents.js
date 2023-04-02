@@ -46,6 +46,19 @@ const ErrorDiv = styled.div`
   margin: 5px;
 `;
 
+const ExternalLink = styled.a`
+  color: ${colors.text};
+  &:hover {
+    color: ${colors.highlight};
+  }
+`
+
 export { 
-  MainWrapper, MainContent, Panel, PanelHeading, TextDiv, ErrorDiv 
+  MainWrapper,
+  MainContent,
+  Panel,
+  PanelHeading,
+  TextDiv,
+  ErrorDiv,
+  ExternalLink
 };
