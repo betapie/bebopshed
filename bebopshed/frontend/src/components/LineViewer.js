@@ -6,6 +6,7 @@ import {
   MainContent,
   Panel,
   PanelHeading,
+  ErrorDiv,
 } from "./MainComponents";
 import colors from "../style/ColorPalette";
 import ProcessingMenu from "./ProcessingMenu";
@@ -35,6 +36,7 @@ const DEFAULT_STATE = {
   },
   keyBasepitch: null,
   keyAccidental: null,
+  error: null,
 };
 
 export default class LineViewer extends React.Component {
@@ -48,10 +50,15 @@ export default class LineViewer extends React.Component {
     if (queryParams) {
       url += "?" + new URLSearchParams(queryParams).toString();
     }
-    console.log("executing fetch line query at url \'" + url + "\'")
+    console.log("executing fetch line query at url '" + url + "'");
     this.setState((state) => DEFAULT_STATE);
     fetch(url)
-      .then((response) => response.json())
+      .then((response) => {
+        if (!response.ok) {
+          throw Error(response.statusText);
+        }
+        return response.json();
+      })
       .then((data) => {
         this.setState({
           line: {
@@ -63,15 +70,17 @@ export default class LineViewer extends React.Component {
           keyBasepitch: data.key_basepitch,
           keyAccidental: data.key_accidental,
         });
+      })
+      .catch((error) => {
+        console.log(error);
+        this.setState({
+          error: error,
+        });
       });
   }
 
   componentDidMount() {
-    this.fetchLine();
-  }
-
-  fetchLine() {
-    this.executeLineFetch("/api/generate")
+    this.executeLineFetch("/api/generate");
   }
 
   chopsBuilder(startKeyBasePitch, startKeyAccidental, deltaKey) {
@@ -79,9 +88,9 @@ export default class LineViewer extends React.Component {
       id: this.state.line.id,
       key_basepitch: startKeyBasePitch,
       key_accidental: startKeyAccidental,
-      delta_key: deltaKey
+      delta_key: deltaKey,
     };
-    this.executeLineFetch("/api/chops_builder", queryParams)
+    this.executeLineFetch("/api/chops_builder", queryParams);
   }
 
   render() {
@@ -92,6 +101,15 @@ export default class LineViewer extends React.Component {
 
     const line_view = this.state.line.lineRender ? (
       parse(this.state.line.lineRender)
+    ) : this.state.error ? (
+      <ErrorDiv>
+        Seems like an error occured! <br />
+        Someone must have tripped over the drum set.
+        <br />
+        We are sorry for that.
+        <br />
+        Why don't you try another line?
+      </ErrorDiv>
     ) : (
       <Spinner />
     );
@@ -102,17 +120,20 @@ export default class LineViewer extends React.Component {
           <Panel>
             <PanelHeading>{heading}</PanelHeading>
             {this.state.keyBasepitch && (
-                <ProcessingMenu
-                  lineId={this.state.line.id}
-                  keyBasePitch={this.state.keyBasepitch}
-                  keyAccidental={this.state.keyAccidental}
-                  executeLineFetch={(endpoint, queryParams) =>
-                    this.executeLineFetch(endpoint, queryParams)
-                  }
-                />
-              )}
+              <ProcessingMenu
+                lineId={this.state.line.id}
+                keyBasePitch={this.state.keyBasepitch}
+                keyAccidental={this.state.keyAccidental}
+                executeLineFetch={(endpoint, queryParams) =>
+                  this.executeLineFetch(endpoint, queryParams)
+                }
+              />
+            )}
             <LineGraphic id="line-graphic">{line_view}</LineGraphic>
-            <DefaultButton id="btn-generate" onClick={() => this.fetchLine()}>
+            <DefaultButton
+              id="btn-generate"
+              onClick={() => this.executeLineFetch("/api/generate")}
+            >
               Give me another one!
             </DefaultButton>
           </Panel>

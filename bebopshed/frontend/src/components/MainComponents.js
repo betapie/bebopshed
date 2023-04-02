@@ -38,4 +38,14 @@ const TextDiv = styled.div`
   padding: 5px;
 `;
 
-export { MainWrapper, MainContent, Panel, PanelHeading, TextDiv };
+const ErrorDiv = styled.div`
+  border: 2px solid ${colors.highlight};
+  border-radius: 10px;
+  color: ${colors.highlight};
+  padding: 5px;
+  margin: 5px;
+`;
+
+export { 
+  MainWrapper, MainContent, Panel, PanelHeading, TextDiv, ErrorDiv 
+};

@@ -1,5 +1,6 @@
 import subprocess
 import tempfile
+import decouple
 
 from .lily_builder import (
     LilyBuilder,
@@ -16,7 +17,9 @@ class MusicRenderer:
         # TODO: handle errors in lily string creation
         lily_string = self.create_lily_string(line, chords, **kwargs)
         tmp_file = tempfile.NamedTemporaryFile(
-            "r", dir="tmp", suffix=".cropped.svg"
+            "r",
+            dir="/tmp",
+            suffix=".cropped.svg",
         )
 
         proc = subprocess.Popen(
@@ -44,13 +47,10 @@ class MusicRenderer:
     def create_lily_string(self, line: str, chords: str, **kwargs):
         builder = LilyBuilder()
 
-        builder.add_include(
-            "lily_proc/lily_styles/line.ily"
-        ).add_include(
-            "lily_proc/lily_styles/lilyjazz.ily"
-        ).add_include(
-            "lily_proc/lily_styles/jazzchords.ily"
-        )
+        styles_path = f"{decouple.config('SITE_PATH')}/lily_proc/lily_styles"
+        builder.add_include(f"{styles_path}/line.ily").add_include(
+            f"{styles_path}/lilyjazz.ily"
+        ).add_include(f"{styles_path}/jazzchords.ily")
 
         parser = LineParser()
         line = parser.parse(line)

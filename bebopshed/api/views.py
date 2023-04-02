@@ -18,7 +18,10 @@ def generate_line(request):
     result = {}
     id = request.GET.get("id", None)
     if id:
-        line = Line.objects.get(id=id)
+        try:
+            line = Line.objects.get(id=id)
+        except Line.DoesNotExist:
+            return HttpResponseBadRequest(f"No line with id {id}")
     else:
         count = Line.objects.count()
         line = Line.objects.all()[random.randint(0, count-1)]
@@ -68,8 +71,9 @@ def generate_chops_build(request):
     id = request.GET.get("id", None)
     if not id:
         return HttpResponseBadRequest("Required parameter 'id' missing")
-    line = Line.objects.get(id=id)
-    if not line:
+    try:
+        line = Line.objects.get(id=id)
+    except Line.DoesNotExist:
         return HttpResponseBadRequest(f"No line with id {id}")
 
     kwargs = {}
