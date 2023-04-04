@@ -36,6 +36,7 @@ class Line(models.Model):
     progression = models.ForeignKey(
         Progression, models.SET_NULL, blank=True, null=True)
     key = models.CharField(max_length=3, choices=Key.choices)
+    to_review = models.BooleanField(default=True)
 
     def __str__(self):
         return f"#{self.id}: {self.progression.sequence} in {self.key}"

@@ -10,21 +10,22 @@ from lily_proc.music_renderer import MusicRenderer
 
 
 def main(request):
-    return HttpResponse('Welcome to bebopshed API')
+    return HttpResponse("Welcome to bebopshed API")
 
 
 @api_view(["GET"])
 def generate_line(request):
     result = {}
     id = request.GET.get("id", None)
-    if id:
-        try:
-            line = Line.objects.get(id=id)
-        except Line.DoesNotExist:
-            return HttpResponseBadRequest(f"No line with id {id}")
-    else:
-        count = Line.objects.count()
-        line = Line.objects.all()[random.randint(0, count-1)]
+    if not id:
+        ids = Line.objects.filter(to_review=False).values_list("id")
+        if not ids:
+            return HttpResponseBadRequest("No line with for query")
+        id = random.choice(ids)[0]
+    try:
+        line = Line.objects.get(id=id)
+    except Line.DoesNotExist:
+        return HttpResponseBadRequest(f"No line with id {id}")
 
     print(f"rendering line: {line.id}")
 
@@ -39,7 +40,7 @@ def generate_line(request):
             key += "is"
         kwargs["transpose"] = {
             "orig_key": str(line.key).lower(),
-            "target_key": key.lower()
+            "target_key": key.lower(),
         }
     else:
         key = str(line.key).lower()
@@ -89,7 +90,7 @@ def generate_chops_build(request):
     chops_builder_params = {
         "orig_key": str(line.key).lower(),
         "start_key": key,
-        "delta": delta
+        "delta": delta,
     }
     kwargs["chops_builder"] = chops_builder_params
 
