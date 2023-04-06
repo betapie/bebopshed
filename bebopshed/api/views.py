@@ -27,8 +27,6 @@ def generate_line(request):
     except Line.DoesNotExist:
         return HttpResponseBadRequest(f"No line with id {id}")
 
-    print(f"rendering line: {line.id}")
-
     kwargs = {}
     key_basepitch = request.GET.get("key_basepitch", None)
     key_accidental = request.GET.get("key_accidental", None)

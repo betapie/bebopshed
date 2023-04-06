@@ -103,6 +103,9 @@ dist
 # TernJS port file
 .tern-port
 
+# backup files
+.bak
+
 # frontend static output files
 bebopshed/frontend/static/frontend/
 
@@ -112,3 +115,5 @@ bebopshed/frontend/static/rest_framework
 
 __pycache__
 db.sqlite3
+
+launch.json

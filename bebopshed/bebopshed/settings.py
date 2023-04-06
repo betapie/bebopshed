@@ -83,7 +83,7 @@ DATABASES = {
         'NAME': decouple.config("DB_NAME"),
         'USER': decouple.config("DB_USER"),
         'PASSWORD': decouple.config("DB_PASSWORD"),
-        'HOST': 'localhost',
+        'HOST': decouple.config("DB_HOST"),
         'PORT': ''
     }
 }
