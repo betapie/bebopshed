@@ -1,6 +1,4 @@
-import React from "react";
 import styled from "styled-components";
-
 import colors from "../style/ColorPalette";
 
 const MainWrapper = styled.div`
@@ -34,31 +32,9 @@ const PanelHeading = styled.div`
   font-size: larger;
 `;
 
-const TextDiv = styled.div`
-  padding: 5px;
-`;
-
-const ErrorDiv = styled.div`
-  border: 2px solid ${colors.highlight};
-  border-radius: 10px;
-  color: ${colors.highlight};
-  padding: 5px;
-  margin: 5px;
-`;
-
-const ExternalLink = styled.a`
-  color: ${colors.text};
-  &:hover {
-    color: ${colors.highlight};
-  }
-`
-
 export { 
   MainWrapper,
   MainContent,
   Panel,
-  PanelHeading,
-  TextDiv,
-  ErrorDiv,
-  ExternalLink
+  PanelHeading
 };

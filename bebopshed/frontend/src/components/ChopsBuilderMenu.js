@@ -3,7 +3,7 @@ import styled from "styled-components";
 import colors from "../style/ColorPalette";
 import { ToggleButton, DefaultButton } from "./Buttons";
 import { ButtonGroup } from "react-bootstrap";
-import { TextDiv } from "./MainComponents";
+import { TextDiv } from "./TextComponents";
 
 const basePitches = ["c", "d", "e", "f", "g", "a", "b"];
 const accidentals = ["flat", "natural", "sharp"];

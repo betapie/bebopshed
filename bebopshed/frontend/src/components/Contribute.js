@@ -1,6 +1,6 @@
 import React from "react";
-import { MainWrapper, MainContent, Panel, ExternalLink } from "./MainComponents";
-import { Link } from 'react-router-dom'
+import { MainWrapper, MainContent, Panel } from "./MainComponents";
+import { ExternalLink } from "./Links";
 
 const Contribute = () => {
   return (

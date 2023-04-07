@@ -6,8 +6,8 @@ import {
   MainContent,
   Panel,
   PanelHeading,
-  ErrorDiv,
 } from "./MainComponents";
+import { ErrorDiv, KeyText } from "./TextComponents";
 import colors from "../style/ColorPalette";
 import ProcessingMenu from "./ProcessingMenu";
 import Spinner from "./Spinner";
@@ -26,6 +26,13 @@ const LineGraphic = styled.div`
     margin-bottom: 20px;
   }
 `;
+
+const LOAD_HEADINGS = [
+  "Tuning Instruments...",
+  "Brewing Coffee...",
+  "Filling up the fridge...",
+  "Dimming the light...",
+];
 
 const DEFAULT_STATE = {
   line: {
@@ -93,12 +100,29 @@ export default class LineViewer extends React.Component {
     this.executeLineFetch("/api/chops_builder", queryParams);
   }
 
-  render() {
-    let heading = "Tuning Instruments...";
-    if (this.state.line.lineRender) {
-      heading = `#${this.state.line.id}: ${this.state.line.progName}`;
+  getHeading() {
+    if (!this.state.line.lineRender) {
+      return (
+        <PanelHeading>
+          {LOAD_HEADINGS[Math.floor(Math.random() * LOAD_HEADINGS.length)]}
+        </PanelHeading>
+      );
     }
+    let keyText = " " + this.state.keyBasepitch.toUpperCase();
+      if (this.state.keyAccidental == "flat") {
+        keyText += ">";
+      } else if (this.state.keyAccidental == "sharp") {
+        keyText += "<";
+      }
+      return (
+        <PanelHeading>
+          {this.state.line.progName} in
+          <KeyText>{keyText}</KeyText>
+        </PanelHeading>
+      );
+  }
 
+  render() {
     const line_view = this.state.line.lineRender ? (
       parse(this.state.line.lineRender)
     ) : this.state.error ? (
@@ -118,7 +142,7 @@ export default class LineViewer extends React.Component {
       <MainWrapper>
         <MainContent>
           <Panel>
-            <PanelHeading>{heading}</PanelHeading>
+            {this.getHeading()}
             {this.state.keyBasepitch && (
               <ProcessingMenu
                 lineId={this.state.line.id}
