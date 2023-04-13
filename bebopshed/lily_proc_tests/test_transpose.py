@@ -8,7 +8,7 @@ class TestTransposer(unittest.TestCase):
         pitch_from = Pitch(BasePitch.C, Accidental.NATURAL, Octave.ONE_LINED)
         pitch_to = Pitch(BasePitch.E, Accidental.FLAT, Octave.ONE_LINED)
 
-        transposer = PitchTransposer(pitch_from, pitch_to)
+        transposer = PitchTransposer(pitch_from, pitch_to, simplify=True)
 
         cases = [
             (

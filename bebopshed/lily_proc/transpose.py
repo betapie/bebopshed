@@ -20,13 +20,14 @@ class PitchTransposer:
     ]
     NUM_BASE_PITCHES = 7
 
-    def __init__(self, from_pitch: Pitch, to_pitch: Pitch):
+    def __init__(self, from_pitch: Pitch, to_pitch: Pitch, simplify=True):
         self._delta_base = self.BASE_PITCHES.index(
             to_pitch.base_pitch
         ) - self.BASE_PITCHES.index(from_pitch.base_pitch)
         self._delta_abs = (
             to_pitch.absolute_pitch() - from_pitch.absolute_pitch()
         )
+        self._simplify = simplify
 
     def transpose(self, object: MusicObject):
         if isinstance(object, Pitch):
@@ -62,15 +63,33 @@ class PitchTransposer:
         )
         acc_delta = self._delta_abs - base_delta
         if acc_delta > 0:
-            while acc_delta > 2:
+            while acc_delta > 6:
                 acc_delta -= 12
                 octave += 1
         else:
-            while acc_delta < -2:
+            while acc_delta < -6:
                 acc_delta += 12
                 octave -= 1
 
-        # TODO: if abs(acc_delta) > 1 -> simplify -> change base_pitch
+        if self._simplify:
+            if acc_delta > 1:
+                base_pitch_idx += 1
+                if base_pitch_idx >= len(self.BASE_PITCHES):
+                    base_pitch_idx = 0
+                    octave += 1
+                base_pitch = self.BASE_PITCHES[base_pitch_idx]
+            elif acc_delta < -1:
+                base_pitch_idx -= 1
+                if base_pitch_idx < 0:
+                    base_pitch_idx = len(self.BASE_PITCHES) - 1
+                    octave -= 1
+                base_pitch = self.BASE_PITCHES[base_pitch_idx]
+            acc_delta = self._delta_abs - (
+                Pitch(
+                    base_pitch, Accidental.NATURAL, Octave(octave)
+                ).absolute_pitch()
+                - pitch.absolute_pitch()
+            )
 
         return Pitch(base_pitch, Accidental(acc_delta), Octave(octave))
 
@@ -134,9 +153,7 @@ class KeyTransposer:
             Octave.ONE_LINED,
         )
         to_pitch = Pitch(
-            self.to_key.base_pitch,
-            self.to_key.accidental,
-            Octave.ONE_LINED
+            self.to_key.base_pitch, self.to_key.accidental, Octave.ONE_LINED
         )
         delta = to_pitch.absolute_pitch() - from_pitch.absolute_pitch()
         if self.strategy == KeyTransposeStrategy.UP and delta < 0:
