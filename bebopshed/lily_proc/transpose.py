@@ -5,6 +5,7 @@ from .pitch import Pitch, Key, BasePitch, Accidental, Octave
 from .note import Note
 from .tuplet import Tuplet
 from .line import Line
+from .bar import Bar
 from .chord import Chord, Chords
 
 
@@ -44,6 +45,8 @@ class PitchTransposer:
             return self._transpose_line(object)
         if isinstance(object, Chords):
             return self._transpose_chords(object)
+        if isinstance(object, Bar):
+            return self._tranpose_bar(object)
         # object does not need to be transposed
         return copy.deepcopy(object)
 
@@ -113,8 +116,12 @@ class PitchTransposer:
         return Tuplet(rational, objects)
 
     def _transpose_line(self, line: Line) -> Line:
-        objects = [self.transpose(obj) for obj in line._objects]
-        return Line(objects)
+        bars = [self.transpose(bar) for bar in line._bars]
+        return Line(bars)
+
+    def _tranpose_bar(self, bar: Bar) -> Bar:
+        objects = [self.transpose(obj) for obj in bar._objects]
+        return Bar(objects)
 
     def _transpose_chords(self, chords: Chords) -> Chords:
         objects = [self.transpose(obj) for obj in chords._objects]
@@ -194,7 +201,10 @@ class KeyTransposer:
         pitches = []
         if isinstance(object, Note):
             pitches.append(object.pitch)
-        elif isinstance(object, Line) or isinstance(object, Tuplet):
+        elif isinstance(object, Bar) or isinstance(object, Tuplet):
             for obj in object._objects:
                 pitches.extend(self._collect_pitches(obj))
+        elif isinstance(object, Line):
+            for bar in object._bars:
+                pitches.extend(self._collect_pitches(bar))
         return pitches

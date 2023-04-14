@@ -1,5 +1,6 @@
 from enum import Enum
 import re
+from .lily_error import LilyParseError
 
 
 class BasePitch(Enum):
@@ -59,6 +60,8 @@ class Pitch:
         reg_pattern = "^([cdefgab])(is|isis|s|ses|es|eses)?(,*'*)$"
         match = re.match(reg_pattern, string)
         groups = match.groups()
+        if not groups or len(groups) < 3:
+            raise LilyParseError(f"Pitch.from_lily: invalid pattern: {string}")
 
         if groups[0] == "c":
             base_pitch = BasePitch.C
@@ -160,9 +163,7 @@ class Pitch:
 
 
 class Key:
-    def __init__(
-        self, pitch: BasePitch, accidental: Accidental
-    ):
+    def __init__(self, pitch: BasePitch, accidental: Accidental):
         self.base_pitch = pitch
         self.accidental = accidental
 

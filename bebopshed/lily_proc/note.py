@@ -1,3 +1,4 @@
+from fractions import Fraction
 from .music_object import MusicObject
 from .pitch import Pitch
 from .duration import Duration
@@ -41,6 +42,9 @@ class Note(MusicObject):
 
     def to_lily(self):
         return self.pitch.to_lily() + self.duration.to_lily()
+
+    def duration_value(self) -> Fraction:
+        return self.duration.value()
 
     def __eq__(self, other):
         return self.pitch == other.pitch and self.duration == other.duration

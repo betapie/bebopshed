@@ -1,30 +1,28 @@
-from .music_object import BarLine, Rest
+from .music_object import Rest, Break
 from .duration import Duration, CommonDuration
+from .bar import Bar
 
 
 class Line:
-    def __init__(self, objects: list):
-        self._objects = objects
+    def __init__(self, bars: list):
+        self._bars = bars
 
     def to_lily(self):
         result = ""
-        for obj in self._objects[:-1]:
-            result += obj.to_lily()
-            if isinstance(obj, BarLine):
-                result += '\n'
+        for idx, bar in enumerate(self._bars[:-1]):
+            if (idx + 1) % 4 == 0:
+                result += bar.to_lily() + Break().to_lily() + '\n'
             else:
-                result += ' '
-        result += self._objects[-1].to_lily()
+                result += bar.to_lily() + '\n'
+        result += self._bars[-1].to_lily()
         return result
 
     def pad(self):
-        bars = sum(isinstance(obj, BarLine) for obj in self._objects)
         power = 1
-        while power < bars:
+        while power < len(self._bars):
             power *= 2
-        to_append = power - bars
-        print(f"bars: {bars}, power: {power}, to_append: {to_append}")
+        to_append = power - len(self._bars)
         for _ in range(to_append):
-            self._objects.extend(
-                [Rest(Duration(CommonDuration.WHOLE)), BarLine()]
+            self._bars.append(
+                Bar([Rest(Duration(CommonDuration.WHOLE))])
             )

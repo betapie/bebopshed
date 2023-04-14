@@ -2,28 +2,54 @@ from fractions import Fraction
 import re
 from .music_object import BarLine, Tie, Rest
 from .note import Note
+from .bar import Bar
 from .line import Line
 from .tuplet import Tuplet
 from .duration import CommonDuration, Duration
+from .lily_error import LilyParseError
 
 
 class LineParser:
     def parse(self, line: str):
-        tokens = self.sanitize(line).split()
+        sanitized = self.sanitize(line)
+        bar_strings = sanitized.split("|")
         last_base_duration = CommonDuration.QUARTER
-        objects, _ = self._parse_tokens(tokens, 0, last_base_duration)
-        return Line(objects)
+        bars = []
+        for bar_str in bar_strings:
+            tokens = bar_str.split()
+            objects, _ = self._parse_tokens(tokens, 0, last_base_duration)
+            if objects:
+                bar = Bar(objects)
+                if not bar.duration_check():
+                    raise LilyParseError(
+                        (
+                            "LineParser: duration check for bar:"
+                            f" '{bar_str}' failed"
+                        )
+                    )
+                bars.append(bar)
+
+        return Line(bars)
 
     def _parse_tokens(self, tokens, idx, last_common_duration):
         objects = []
 
         while idx < len(tokens):
             token = tokens[idx]
+            if not token:
+                idx += 1
+                continue
             if token == "}":
                 break
             elif token == "\\tuplet":
                 rational = Fraction(tokens[idx + 1])
-                # TODO assert tokens[idx + 2] == '{'
+                if tokens[idx + 2] != "{":
+                    raise LilyParseError(
+                        (
+                            "LineParser error: contents of tuplet have to"
+                            "be in a {} block"
+                        )
+                    )
                 tuplet_objects, idx = self._parse_tokens(
                     tokens, idx + 3, last_common_duration
                 )

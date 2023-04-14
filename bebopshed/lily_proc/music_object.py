@@ -1,3 +1,4 @@
+from fractions import Fraction
 from .duration import Duration
 
 
@@ -5,8 +6,11 @@ class MusicObject:
     def from_lily():
         pass
 
-    def to_lily():
+    def to_lily(self):
         pass
+
+    def duration_value(self) -> Fraction:
+        return Fraction()
 
 
 class BarLine(MusicObject):
@@ -33,3 +37,6 @@ class Rest(MusicObject):
 
     def to_lily(self):
         return "r" + self.duration.to_lily()
+
+    def duration_value(self):
+        return self.duration.value()

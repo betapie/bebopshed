@@ -1,5 +1,7 @@
 from enum import Enum
+from fractions import Fraction
 import re
+from .lily_error import LilyParseError
 
 
 class CommonDuration(Enum):
@@ -22,6 +24,14 @@ class Duration:
             and self.dots == other.dots
         )
 
+    def value(self):
+        denom = self.base_duration.value
+        result = Fraction(1, denom)
+        for _ in range(self.dots):
+            denom *= 2
+            result += Fraction(1, denom)
+        return result
+
     def from_lily(string: str):
         if not string:
             return None
@@ -29,6 +39,10 @@ class Duration:
         match = re.match(reg_pattern, string)
         groups = match.groups()
 
+        if not groups or len(groups) < 2:
+            raise LilyParseError(
+                f"Duration.from_lily: Invalid expression: {string}"
+            )
         dots = len(groups[1])
 
         if groups[0] == "1":

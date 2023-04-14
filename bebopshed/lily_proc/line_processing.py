@@ -2,7 +2,6 @@ from .line import Line
 from .chord import Chords
 from .pitch import Key, BasePitch, Accidental
 from .transpose import KeyTransposer
-from .music_object import Break
 
 
 class LineProcessor:
@@ -67,12 +66,6 @@ class ChopsBuilderProcessor:
         self.orig_key = orig_key
         self.start_key = start_key
         self.delta = delta
-        self.tmp_keys = [
-            Key(BasePitch.D, Accidental.FLAT),
-            Key(BasePitch.E, Accidental.NATURAL),
-            Key(BasePitch.G, Accidental.NATURAL),
-            Key(BasePitch.B, Accidental.FLAT),
-        ]
 
     def process(self, line: Line, chords: Chords) -> tuple:
         line.pad()
@@ -93,10 +86,8 @@ class ChopsBuilderProcessor:
             transposer = KeyTransposer(self.orig_key, cur_key)
             transposed_line = transposer.transpose(line)
             transposed_chords = transposer.transpose(chords)
-            result_line._objects.extend(transposed_line._objects)
-            result_line._objects.append(Break())
+            result_line._bars.extend(transposed_line._bars)
             result_chords._objects.extend(transposed_chords._objects)
-            result_line._objects.append(Break())
             cur_val += self.delta
             if cur_val < 0:
                 cur_val += 12
