@@ -6,6 +6,7 @@ from rest_framework.decorators import api_view
 
 from .models import Line
 
+from lily_proc.music_rng import KeyRng
 from lily_proc.music_renderer import MusicRenderer
 
 
@@ -36,12 +37,12 @@ def generate_line(request):
             key += "es"
         elif key_accidental == "sharp":
             key += "is"
-        kwargs["transpose"] = {
-            "orig_key": str(line.key).lower(),
-            "target_key": key.lower(),
-        }
     else:
-        key = str(line.key).lower()
+        if str(line.progression.mode).lower() == "minor":
+            rand_key = KeyRng.getMinorKey()
+        else:
+            rand_key = KeyRng.getMajorKey()
+        key = rand_key.to_lily()
         key_basepitch = key[0]
         acc = key[1:]
         if acc in ["s", "es"]:
@@ -51,8 +52,13 @@ def generate_line(request):
         else:
             key_accidental = "natural"
 
+    kwargs["transpose"] = {
+        "orig_key": "c",
+        "target_key": key.lower(),
+    }
+
     renderer = MusicRenderer()
-    svg = renderer.render(line.line, line.chords, **kwargs)
+    svg = renderer.render(line.line, line.progression.chords, **kwargs)
 
     result["id"] = line.id
     result["line"] = svg
@@ -75,7 +81,7 @@ def generate_chops_build(request):
     except Line.DoesNotExist:
         return HttpResponseBadRequest(f"No line with id {id}")
 
-    kwargs = {}
+    kwargs = {"mode": str(line.progression.mode).lower()}
     key_basepitch = request.GET.get("key_basepitch", "c")
     key_accidental = request.GET.get("key_accidental", "")
     key = key_basepitch
@@ -86,14 +92,14 @@ def generate_chops_build(request):
     delta = request.GET.get("delta_key", "-2")
 
     chops_builder_params = {
-        "orig_key": str(line.key).lower(),
+        "orig_key": "c",
         "start_key": key,
         "delta": delta,
     }
     kwargs["chops_builder"] = chops_builder_params
 
     renderer = MusicRenderer()
-    svg = renderer.render(line.line, line.chords, **kwargs)
+    svg = renderer.render(line.line, line.progression.chords, **kwargs)
 
     result["id"] = line.id
     result["line"] = svg

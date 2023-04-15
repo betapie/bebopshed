@@ -2,8 +2,14 @@ from django.db import models
 
 
 class Progression(models.Model):
+    class Mode(models.TextChoices):
+        MAJOR = "Major"
+        MINOR = "Minor"
+
     sequence = models.CharField(max_length=32)
     common_name = models.CharField(max_length=64)
+    chords = models.TextField()
+    mode = models.CharField(max_length=16, choices=Mode.choices)
 
     def __str__(self):
         return f"{self.sequence} ({self.common_name})"
@@ -31,12 +37,15 @@ class Line(models.Model):
 
     created = models.DateTimeField(auto_now_add=True)
     modified = models.DateTimeField(auto_now=True)
+    original_line = models.TextField()
     line = models.TextField()
-    chords = models.TextField()
     progression = models.ForeignKey(
-        Progression, models.SET_NULL, blank=True, null=True)
-    key = models.CharField(max_length=3, choices=Key.choices)
+        Progression, models.SET_NULL, blank=True, null=True
+    )
+    original_key = models.CharField(max_length=3, choices=Key.choices)
     to_review = models.BooleanField(default=True)
 
     def __str__(self):
-        return f"#{self.id}: {self.progression.sequence} in {self.key}"
+        return (
+            f"#{self.id}: {self.progression.sequence} in {self.original_key}"
+        )
