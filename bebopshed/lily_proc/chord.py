@@ -2,7 +2,8 @@ from enum import Enum
 from .pitch import Key
 from .duration import Duration, CommonDuration
 from .note import Note
-from .music_object import BarLine, Rest
+from .music_object import Rest
+from .bar import Bar
 
 
 class Quality(Enum):
@@ -65,38 +66,39 @@ class Chord:
 
 
 class Chords:
-    def __init__(self, objects: list):
-        self._objects = objects
+    def __init__(self, bars: list):
+        self._bars = bars
 
     def from_lily(string: str):
-        objects = []
-        tokens = string.split(" ")
-        for token in tokens:
-            if token == "|":
-                objects.append(BarLine())
-            else:
+        bars = []
+        bar_strings = string.split("|")
+        for bar_str in bar_strings:
+            objects = []
+            tokens = bar_str.split(" ")
+            for token in tokens:
+                if not token:
+                    continue
                 objects.append(Chord.from_lily(token))
-        return Chords(objects)
+            if not objects:
+                continue
+            bar = Bar(objects)
+            bars.append(bar)
+
+        return Chords(bars)
 
     def to_lily(self):
         result = ""
-        for obj in self._objects[:-1]:
-            result += obj.to_lily()
-            if isinstance(obj, BarLine):
-                result += "\n"
-            else:
-                result += " "
-        result += self._objects[-1].to_lily()
+        for bar in self._bars[:-1]:
+            result += bar.to_lily() + "\n"
+        result += self._bars[-1].to_lily()
         return result
 
     def pad(self):
-        bars = sum(isinstance(obj, BarLine) for obj in self._objects)
         power = 1
-        while power < bars:
+        while power < len(self._bars):
             power *= 2
-        to_append = power - bars
-        print(f"bars: {bars}, power: {power}, to_append: {to_append}")
+        to_append = power - len(self._bars)
         for _ in range(to_append):
-            self._objects.extend(
-                [Rest(Duration(CommonDuration.WHOLE)), BarLine()]
+            self._bars.append(
+                Bar([Rest(Duration(CommonDuration.WHOLE))])
             )

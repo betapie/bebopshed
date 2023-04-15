@@ -87,7 +87,7 @@ class ChopsBuilderProcessor:
             transposed_line = transposer.transpose(line)
             transposed_chords = transposer.transpose(chords)
             result_line._bars.extend(transposed_line._bars)
-            result_chords._objects.extend(transposed_chords._objects)
+            result_chords._bars.extend(transposed_chords._bars)
             cur_val += self.delta
             if cur_val < 0:
                 cur_val += 12

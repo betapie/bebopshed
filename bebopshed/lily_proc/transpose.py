@@ -124,8 +124,8 @@ class PitchTransposer:
         return Bar(objects)
 
     def _transpose_chords(self, chords: Chords) -> Chords:
-        objects = [self.transpose(obj) for obj in chords._objects]
-        return Chords(objects)
+        bars = [self.transpose(bar) for bar in chords._bars]
+        return Chords(bars)
 
 
 class KeyTransposeStrategy(Enum):
