@@ -54,8 +54,8 @@ class MusicRenderer:
 
         parser = LineParser()
         line = parser.parse(line)
-        print(chords)
         chords = Chords.from_lily(chords)
+        chords.pad(len(line._bars))
         line, chords = LineProcessor.process(line, chords, **kwargs)
 
         music_expr = LilySimulExpression(

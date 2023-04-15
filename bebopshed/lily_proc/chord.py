@@ -1,8 +1,9 @@
 from enum import Enum
+import copy
+from typing import Optional
 from .pitch import Key
 from .duration import Duration, CommonDuration
 from .note import Note
-from .music_object import Rest
 from .bar import Bar
 
 
@@ -93,12 +94,12 @@ class Chords:
         result += self._bars[-1].to_lily()
         return result
 
-    def pad(self):
-        power = 1
-        while power < len(self._bars):
-            power *= 2
-        to_append = power - len(self._bars)
+    def pad(self, length: Optional[int] = None):
+        if not length:
+            length = 1
+            while length < len(self._bars):
+                length *= 2
+        to_append = max(length - len(self._bars), 0)
+        to_cpy = self._bars[-1]
         for _ in range(to_append):
-            self._bars.append(
-                Bar([Rest(Duration(CommonDuration.WHOLE))])
-            )
+            self._bars.append(copy.deepcopy(to_cpy))
