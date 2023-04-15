@@ -4,9 +4,9 @@ from django.http import HttpResponse, HttpResponseBadRequest
 from rest_framework.response import Response
 from rest_framework.decorators import api_view
 
-from .models import Line
+from .models import Line, Progression
 
-from lily_proc.music_rng import KeyRng
+from lily_proc.random import RandomKeyGenerator
 from lily_proc.music_renderer import MusicRenderer
 
 
@@ -39,9 +39,9 @@ def generate_line(request):
             key += "is"
     else:
         if str(line.progression.mode).lower() == "minor":
-            rand_key = KeyRng.getMinorKey()
+            rand_key = RandomKeyGenerator.minorKey()
         else:
-            rand_key = KeyRng.getMajorKey()
+            rand_key = RandomKeyGenerator.majorKey()
         key = rand_key.to_lily()
         key_basepitch = key[0]
         acc = key[1:]
@@ -109,4 +109,18 @@ def generate_chops_build(request):
     result["key_basepitch"] = key_basepitch
     result["key_accidental"] = key_accidental
 
+    return Response(result)
+
+
+@api_view(["GET"])
+def get_progessions(request):
+    result = {}
+    progs = []
+    for prog in Progression.objects.all().order_by("id"):
+        progs.append({
+            "id": prog.id,
+            "sequence": prog.sequence,
+            "common_name": prog.common_name,
+        })
+    result["progressions"] = progs
     return Response(result)
