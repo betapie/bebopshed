@@ -2,7 +2,7 @@ import random
 from .pitch import Key, BasePitch, Accidental
 
 
-class KeyRng:
+class RandomKeyGenerator:
     MAJOR_KEYS = [
         Key(BasePitch.C, Accidental.NATURAL),
         Key(BasePitch.F, Accidental.NATURAL),
@@ -31,12 +31,16 @@ class KeyRng:
 
     MINOR_KEY_WEIGHTS = [8, 8, 6, 4, 3, 4, 2, 1, 1]
 
-    def getMajorKey() -> Key:
+    def majorKey() -> Key:
         return random.choices(
-            KeyRng.MAJOR_KEYS, weights=KeyRng.MAJOR_KEY_WEIGHTS, k=1
+            RandomKeyGenerator.MAJOR_KEYS,
+            weights=RandomKeyGenerator.MAJOR_KEY_WEIGHTS,
+            k=1,
         )[0]
 
-    def getMinorKey() -> Key:
+    def minorKey() -> Key:
         return random.choices(
-            KeyRng.MINOR_KEYS, weights=KeyRng.MINOR_KEY_WEIGHTS, k=1
+            RandomKeyGenerator.MINOR_KEYS,
+            weights=RandomKeyGenerator.MINOR_KEY_WEIGHTS,
+            k=1,
         )[0]
