@@ -1,3 +1,4 @@
+from typing import Optional
 from .line import Line
 from .chord import Chords
 from .pitch import Key, BasePitch, Accidental
@@ -31,7 +32,10 @@ class LineProcessor:
         orig_key = Key.from_lily(kwargs["orig_key"])
         start_key = Key.from_lily(kwargs["start_key"])
         delta = int(kwargs["delta"])
-        return ChopsBuilderProcessor(orig_key, start_key, delta)
+        mode = None
+        if "mode" in kwargs.keys():
+            mode = kwargs["mode"]
+        return ChopsBuilderProcessor(orig_key, start_key, delta, mode)
 
 
 class LineTransposeProcessor:
@@ -47,14 +51,14 @@ class LineTransposeProcessor:
 
 
 class ChopsBuilderProcessor:
-    PREFERRED_KEYS = {
+    PREFERRED_MAJOR_KEYS = {
         0: Key(BasePitch.C, Accidental.NATURAL),
         1: Key(BasePitch.D, Accidental.FLAT),
         2: Key(BasePitch.D, Accidental.NATURAL),
         3: Key(BasePitch.E, Accidental.FLAT),
         4: Key(BasePitch.E, Accidental.NATURAL),
         5: Key(BasePitch.F, Accidental.NATURAL),
-        6: Key(BasePitch.F, Accidental.SHARP),
+        6: Key(BasePitch.G, Accidental.FLAT),
         7: Key(BasePitch.G, Accidental.NATURAL),
         8: Key(BasePitch.A, Accidental.FLAT),
         9: Key(BasePitch.A, Accidental.NATURAL),
@@ -62,10 +66,32 @@ class ChopsBuilderProcessor:
         11: Key(BasePitch.B, Accidental.NATURAL),
     }
 
-    def __init__(self, orig_key: Key, start_key: Key, delta: int):
+    PREFERRED_MINOR_KEYS = {
+        0: Key(BasePitch.C, Accidental.NATURAL),
+        1: Key(BasePitch.C, Accidental.SHARP),
+        2: Key(BasePitch.D, Accidental.NATURAL),
+        3: Key(BasePitch.E, Accidental.FLAT),
+        4: Key(BasePitch.E, Accidental.NATURAL),
+        5: Key(BasePitch.F, Accidental.NATURAL),
+        6: Key(BasePitch.F, Accidental.SHARP),
+        7: Key(BasePitch.G, Accidental.NATURAL),
+        8: Key(BasePitch.G, Accidental.SHARP),
+        9: Key(BasePitch.A, Accidental.NATURAL),
+        10: Key(BasePitch.B, Accidental.FLAT),
+        11: Key(BasePitch.B, Accidental.NATURAL),
+    }
+
+    def __init__(
+        self,
+        orig_key: Key,
+        start_key: Key,
+        delta: int,
+        mode: Optional[str] = None,
+    ):
         self.orig_key = orig_key
         self.start_key = start_key
         self.delta = delta
+        self.mode = mode
 
     def process(self, line: Line, chords: Chords) -> tuple:
         line.pad()
@@ -82,7 +108,10 @@ class ChopsBuilderProcessor:
 
         cur_val = start_val
         while True:
-            cur_key = self.PREFERRED_KEYS[cur_val]
+            if not self.mode or self.mode != "minor":
+                cur_key = self.PREFERRED_MAJOR_KEYS[cur_val]
+            else:
+                cur_key = self.PREFERRED_MINOR_KEYS[cur_val]
             transposer = KeyTransposer(self.orig_key, cur_key)
             transposed_line = transposer.transpose(line)
             transposed_chords = transposer.transpose(chords)

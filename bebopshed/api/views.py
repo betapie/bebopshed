@@ -81,7 +81,7 @@ def generate_chops_build(request):
     except Line.DoesNotExist:
         return HttpResponseBadRequest(f"No line with id {id}")
 
-    kwargs = {"mode": str(line.progression.mode).lower()}
+    kwargs = {}
     key_basepitch = request.GET.get("key_basepitch", "c")
     key_accidental = request.GET.get("key_accidental", "")
     key = key_basepitch
@@ -95,6 +95,7 @@ def generate_chops_build(request):
         "orig_key": "c",
         "start_key": key,
         "delta": delta,
+        "mode": str(line.progression.mode).lower(),
     }
     kwargs["chops_builder"] = chops_builder_params
 
