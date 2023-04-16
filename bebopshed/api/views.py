@@ -19,9 +19,17 @@ def generate_line(request):
     result = {}
     id = request.GET.get("id", None)
     if not id:
-        ids = Line.objects.filter(to_review=False).values_list("id")
+        progression_id = request.GET.get("progression_id", None)
+        filtered_lines = Line.objects.filter(to_review=False)
+        if progression_id:
+            filtered_lines = filtered_lines.filter(
+                progression_id=progression_id
+            )
+        ids = filtered_lines.values_list("id")
         if not ids:
-            return HttpResponseBadRequest("No line with for query")
+            return HttpResponseBadRequest(
+                "No line with queried parameters exists"
+            )
         id = random.choice(ids)[0]
     try:
         line = Line.objects.get(id=id)
@@ -117,10 +125,12 @@ def get_progessions(request):
     result = {}
     progs = []
     for prog in Progression.objects.all().order_by("id"):
-        progs.append({
-            "id": prog.id,
-            "sequence": prog.sequence,
-            "common_name": prog.common_name,
-        })
+        progs.append(
+            {
+                "id": prog.id,
+                "sequence": prog.sequence,
+                "common_name": prog.common_name,
+            }
+        )
     result["progressions"] = progs
     return Response(result)
