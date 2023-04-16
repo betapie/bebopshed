@@ -1,12 +1,26 @@
-# import argparse
+import argparse
 import os
 import tarfile
 
 
 def main():
-    target_path = "/home/manu/projects/bebopshed/deploy/deploy.tar"
+    parser = argparse.ArgumentParser(
+        description="Copies all relevant files to a tar-file for deployment"
+    )
+    parser.add_argument(
+        "-t", "--target_path", default=".", help="Path to the target directory"
+    )
+    parser.add_argument(
+        "-f",
+        "--filename",
+        default="deploy.tar",
+        help="Name of the created tar file",
+    )
+    args = parser.parse_args()
+    target_path = os.path.abspath(args.target_path)
+    target_file = os.path.join(target_path, args.filename)
     source_folders = ["api", "bebopshed", "lily_proc", "frontend"]
-    with tarfile.open(target_path, "w:gz") as tarhandle:
+    with tarfile.open(target_file, "w:gz") as tarhandle:
         while source_folders:
             path = source_folders.pop()
             for elem in os.listdir(path):
