@@ -121,6 +121,27 @@ def generate_chops_build(request):
 
 
 @api_view(["GET"])
+def render_line(request):
+    result = {}
+    lily_line = request.GET.get("lily_line", None)
+    if not lily_line:
+        return HttpResponseBadRequest("Required parameter 'lily_line' missing")
+    lily_chords = request.GET.get("lily_chords", None)
+    if not lily_chords:
+        return HttpResponseBadRequest(
+            "Required parameter 'lily_chords' missing"
+        )
+
+    renderer = MusicRenderer()
+    svg = renderer.render(lily_line, lily_chords)
+
+    result["lily_line"] = lily_line
+    result["lily_chords"] = lily_chords
+    result["line"] = svg
+    return Response(result)
+
+
+@api_view(["GET"])
 def get_progessions(request):
     result = {}
     progs = []
