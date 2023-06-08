@@ -6,6 +6,8 @@ import { Navbar as BootstrapNavbar } from "react-bootstrap";
 
 import styled from "styled-components";
 
+import Logo from "./Logo";
+
 import { Link } from "react-router-dom";
 
 import colors from "../style/ColorPalette";
@@ -32,11 +34,21 @@ const StyledNavbar = styled(BootstrapNavbar)`
   }
 `;
 
+const BrandDiv = styled.div`
+  display: flex;
+  align-items: center;
+`
+
 function Navbar() {
   return (
     <StyledNavbar collapseOnSelect variant="dark" expand="lg">
       <Container>
-        <BootstrapNavbar.Brand href="/">Bebopshed</BootstrapNavbar.Brand>
+        <BootstrapNavbar.Brand href="/">
+          <BrandDiv>
+            <Logo />
+            <div className="brand-link">Bebopshed</div>
+          </BrandDiv>
+        </BootstrapNavbar.Brand>
         <BootstrapNavbar.Toggle aria-controls="responsive-navbar-nav" />
         <BootstrapNavbar.Collapse id="responsive-navbar-nav">
           <Nav className="me-auto"></Nav>

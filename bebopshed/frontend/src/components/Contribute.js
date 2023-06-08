@@ -1,6 +1,7 @@
 import React from "react";
 import { MainWrapper, MainContent, Panel } from "./MainComponents";
 import { ExternalLink } from "./Links";
+//import SubmitLineForm from "./SubmitLineForm";
 
 const Contribute = () => {
   return (

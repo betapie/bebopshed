@@ -7,6 +7,11 @@ module.exports = {
     path: path.resolve(__dirname, "./static/frontend"),
     filename: "[name].js",
   },
+  resolve: {
+    alias: {
+      '@static': path.resolve(__dirname, 'static/'),
+    },
+  },
   module: {
     rules: [
       {
@@ -15,6 +20,10 @@ module.exports = {
         use: {
           loader: "babel-loader",
         },
+      },
+      {
+        test: /\.svg$/,
+        use: ['@svgr/webpack', 'file-loader'],
       }
     ],
   },
