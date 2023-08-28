@@ -32,9 +32,15 @@ const PanelHeading = styled.div`
   font-size: larger;
 `;
 
+const TextDiv = styled.div`
+  font-family: sans-serif;
+  text-align: left;
+`;
+
 export { 
   MainWrapper,
   MainContent,
   Panel,
-  PanelHeading
+  PanelHeading,
+  TextDiv
 };

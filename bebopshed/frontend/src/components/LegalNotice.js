@@ -1,18 +1,13 @@
 import React from "react";
-import { MainWrapper, MainContent, Panel } from "./MainComponents";
+import { MainWrapper, MainContent, Panel, TextDiv } from "./MainComponents";
 import styled from "styled-components";
-
-const LegalTextDiv = styled.div`
-  font-family: sans-serif;
-  text-align: left;
-`;
 
 const LegalNotice = () => {
   return (
     <MainWrapper>
       <MainContent>
         <Panel>
-          <LegalTextDiv>
+          <TextDiv>
             <h1>Legal Notice</h1>
             <h3>Imprint</h3>
             <p>
@@ -66,7 +61,7 @@ const LegalNotice = () => {
               violations, we will remove such contents immediately.
             </p>
             <p>Last Updated: April 1, 2023</p>
-          </LegalTextDiv>
+          </TextDiv>
         </Panel>
       </MainContent>
     </MainWrapper>
