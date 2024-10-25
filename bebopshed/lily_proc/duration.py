@@ -32,6 +32,7 @@ class Duration:
             result += Fraction(1, denom)
         return result
 
+    @staticmethod
     def from_lily(string: str):
         if not string:
             return None

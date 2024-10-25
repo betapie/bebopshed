@@ -21,6 +21,7 @@ class Chord:
         self.quality = quality
         self.decorators = decorators
 
+    @staticmethod
     def from_lily(string: str):
         colon_idx = None
         for idx, c in enumerate(string):
@@ -70,6 +71,7 @@ class Chords:
     def __init__(self, bars: list):
         self._bars = bars
 
+    @staticmethod
     def from_lily(string: str):
         bars = []
         bar_strings = string.split("|")

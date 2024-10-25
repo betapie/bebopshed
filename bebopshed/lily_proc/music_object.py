@@ -3,6 +3,7 @@ from .duration import Duration
 
 
 class MusicObject:
+    @staticmethod
     def from_lily():
         pass
 
@@ -32,6 +33,7 @@ class Rest(MusicObject):
     def __init__(self, duration: Duration):
         self.duration = duration
 
+    @staticmethod
     def from_lily(lily_str: str):
         return Rest(Duration.from_lily(lily_str[1:]))
 

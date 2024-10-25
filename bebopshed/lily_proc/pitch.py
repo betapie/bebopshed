@@ -56,6 +56,7 @@ class Pitch:
             + self.accidental.value
         )
 
+    @staticmethod
     def from_lily(string: str):
         reg_pattern = "^([cdefgab])(is|isis|s|ses|es|eses)?(,*'*)$"
         match = re.match(reg_pattern, string)
@@ -173,6 +174,7 @@ class Key:
             and self.accidental == other.accidental
         )
 
+    @staticmethod
     def from_lily(string: str):
         reg_pattern = "^([cdefgab])(is|isis|s|ses|es|eses)?$"
         match = re.match(reg_pattern, string)

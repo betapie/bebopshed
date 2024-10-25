@@ -16,6 +16,7 @@ class Note(MusicObject):
     def absolute_pitch(self) -> int:
         return self.pitch.absolute_pitch()
 
+    @staticmethod
     def from_lily(string: str):
         sep = 0
         while sep < len(string) and string[sep] not in [
