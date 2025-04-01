@@ -1,0 +1,28 @@
+services:
+  backend:
+    build:
+      context: .
+      dockerfile: docker/backend.Dockerfile
+    volumes:
+      - ./bebopshed:/app/bebopshed
+    ports:
+      - "8000:8000"
+    depends_on:
+      - postgres
+    environment:
+      - DEBUG=True
+  postgres:
+    image: postgres:17
+    restart: always
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB}
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+      - ./backup:/docker-entrypoint-initdb.d
+    ports:
+      - "5432:5432"
+
+volumes:
+  pgdata:

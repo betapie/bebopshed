@@ -116,4 +116,6 @@ bebopshed/frontend/static/rest_framework
 __pycache__
 db.sqlite3
 
+docker/backup/
+
 launch.json
