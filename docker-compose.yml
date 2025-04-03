@@ -11,6 +11,14 @@ services:
       - postgres
     environment:
       - DEBUG=True
+  frontend:
+    build:
+      context: .
+      dockerfile: docker/frontend.Dockerfile
+    volumes:
+      - ./bebopshed:/app/bebopshed
+    environment:
+      - DEBUG=True
   postgres:
     image: postgres:17
     restart: always
