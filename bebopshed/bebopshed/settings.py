@@ -24,9 +24,13 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = decouple.config("SECRET_KEY")
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = decouple.config("DEBUG", default=False, cast=bool)
 
-ALLOWED_HOSTS = ["*"]
+ALLOWED_HOSTS = decouple.config(
+    "ALLOWED_HOSTS", default="", cast=decouple.Csv()
+)
+CSRF_TRUESTED_ORIGINS = decouple.config(
+    "CSRF_TRUESTED_ORIGINS", default="", cast=decouple.Csv())
 
 
 # Application definition
@@ -80,10 +84,10 @@ WSGI_APPLICATION = 'bebopshed.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': decouple.config("DB_NAME"),
-        'USER': decouple.config("DB_USER"),
-        'PASSWORD': decouple.config("DB_PASSWORD"),
-        'HOST': decouple.config("DB_HOST"),
+        'NAME': decouple.config("POSTGRES_DB"),
+        'USER': decouple.config("POSTGRES_USER"),
+        'PASSWORD': decouple.config("POSTGRES_PASSWORD"),
+        'HOST': decouple.config("POSTGRES_HOST"),
         'PORT': ''
     }
 }
