@@ -1,10 +1,11 @@
-from enum import Enum
 import copy
+from enum import Enum
 from typing import Optional
-from .pitch import Key
-from .duration import Duration, CommonDuration
-from .note import Note
+
 from .bar import Bar
+from .duration import CommonDuration, Duration
+from .note import Note
+from .pitch import Key
 
 
 class Quality(Enum):
@@ -13,9 +14,7 @@ class Quality(Enum):
 
 
 class Chord:
-    def __init__(
-        self, key: Key, duration: Duration, quality: Quality, decorators: str
-    ):
+    def __init__(self, key: Key, duration: Duration, quality: Quality, decorators: str):
         self.key = key
         self.duration = duration
         self.quality = quality
@@ -32,19 +31,17 @@ class Chord:
             note = Note.from_lily(string[:colon_idx])
             if colon_idx + 1 < len(string) and string[colon_idx + 1] == "m":
                 quality = Quality.MINOR
-                decorators = string[colon_idx + 2:]
+                decorators = string[colon_idx + 2 :]
             else:
                 quality = Quality.MAJOR
-                decorators = string[colon_idx + 1:]
+                decorators = string[colon_idx + 1 :]
         else:
             note = Note.from_lily(string)
             quality = Quality.MAJOR
             decorators = ""
 
         key = Key(note.pitch.base_pitch, note.pitch.accidental)
-        duration = (
-            note.duration if note.duration else Duration(CommonDuration.WHOLE)
-        )
+        duration = note.duration if note.duration else Duration(CommonDuration.WHOLE)
 
         return Chord(key, duration, quality, decorators)
 

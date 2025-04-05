@@ -1,7 +1,8 @@
 import unittest
+
 from lily_proc.chord import Chord, Quality
-from lily_proc.pitch import Key, BasePitch, Accidental
-from lily_proc.duration import Duration, CommonDuration
+from lily_proc.duration import CommonDuration, Duration
+from lily_proc.pitch import Accidental, BasePitch, Key
 
 
 class TestChord(unittest.TestCase):

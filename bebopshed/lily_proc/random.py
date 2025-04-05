@@ -1,5 +1,6 @@
 import random
-from .pitch import Key, BasePitch, Accidental
+
+from .pitch import Accidental, BasePitch, Key
 
 
 class RandomKeyGenerator:

@@ -1,10 +1,11 @@
 from django.urls import path
+
 from .views import (
-    main,
-    generate_line,
     generate_chops_build,
-    render_line,
+    generate_line,
     get_progessions,
+    main,
+    render_line,
 )
 
 urlpatterns = [

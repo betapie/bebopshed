@@ -1,12 +1,13 @@
 import copy
 from enum import Enum
-from .music_object import MusicObject
-from .pitch import Pitch, Key, BasePitch, Accidental, Octave
-from .note import Note
-from .tuplet import Tuplet
-from .line import Line
+
 from .bar import Bar
 from .chord import Chord, Chords
+from .line import Line
+from .music_object import MusicObject
+from .note import Note
+from .pitch import Accidental, BasePitch, Key, Octave, Pitch
+from .tuplet import Tuplet
 
 
 class PitchTransposer:
@@ -25,9 +26,7 @@ class PitchTransposer:
         self._delta_base = self.BASE_PITCHES.index(
             to_pitch.base_pitch
         ) - self.BASE_PITCHES.index(from_pitch.base_pitch)
-        self._delta_abs = (
-            to_pitch.absolute_pitch() - from_pitch.absolute_pitch()
-        )
+        self._delta_abs = to_pitch.absolute_pitch() - from_pitch.absolute_pitch()
         self._simplify = simplify
 
     def transpose(self, object: MusicObject):
@@ -52,9 +51,7 @@ class PitchTransposer:
 
     def _transpose_pitch(self, pitch: Pitch) -> Pitch:
         octave = pitch.octave.value
-        base_pitch_idx = (
-            self.BASE_PITCHES.index(pitch.base_pitch) + self._delta_base
-        )
+        base_pitch_idx = self.BASE_PITCHES.index(pitch.base_pitch) + self._delta_base
         if base_pitch_idx < 0:
             base_pitch_idx += self.NUM_BASE_PITCHES
         elif base_pitch_idx >= self.NUM_BASE_PITCHES:
@@ -88,9 +85,7 @@ class PitchTransposer:
                     octave -= 1
                 base_pitch = self.BASE_PITCHES[base_pitch_idx]
             acc_delta = self._delta_abs - (
-                Pitch(
-                    base_pitch, Accidental.NATURAL, Octave(octave)
-                ).absolute_pitch()
+                Pitch(base_pitch, Accidental.NATURAL, Octave(octave)).absolute_pitch()
                 - pitch.absolute_pitch()
             )
 
@@ -146,9 +141,7 @@ class KeyTransposer:
     ]
     NUM_BASE_PITCHES = 7
 
-    def __init__(
-        self, from_key: Key, to_key: Key, strategy=KeyTransposeStrategy.AUTO
-    ):
+    def __init__(self, from_key: Key, to_key: Key, strategy=KeyTransposeStrategy.AUTO):
         self.from_key = from_key
         self.to_key = to_key
         self.strategy = strategy

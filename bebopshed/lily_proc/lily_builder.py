@@ -20,9 +20,9 @@ class LilyBuilder:
         return self
 
     def dump(self) -> str:
-        retval = f"\\version \"{self.version}\"\n"
+        retval = f'\\version "{self.version}"\n'
         for include in self._includes:
-            retval += f"\\include \"{include}\"\n"
+            retval += f'\\include "{include}"\n'
 
         for tok in self._tokens:
             retval += str(tok) + "\n"

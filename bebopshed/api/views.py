@@ -1,13 +1,13 @@
 import random
 
 from django.http import HttpResponse, HttpResponseBadRequest
-from rest_framework.response import Response
 from rest_framework.decorators import api_view
+from rest_framework.response import Response
+
+from lily_proc.music_renderer import MusicRenderer
+from lily_proc.random import RandomKeyGenerator
 
 from .models import Line, Progression
-
-from lily_proc.random import RandomKeyGenerator
-from lily_proc.music_renderer import MusicRenderer
 
 
 def main(request):
@@ -22,14 +22,10 @@ def generate_line(request):
         progression_id = request.GET.get("progression_id", None)
         filtered_lines = Line.objects.filter(to_review=False)
         if progression_id:
-            filtered_lines = filtered_lines.filter(
-                progression_id=progression_id
-            )
+            filtered_lines = filtered_lines.filter(progression_id=progression_id)
         ids = filtered_lines.values_list("id")
         if not ids:
-            return HttpResponseBadRequest(
-                "No line with queried parameters exists"
-            )
+            return HttpResponseBadRequest("No line with queried parameters exists")
         id = random.choice(ids)[0]
     try:
         line = Line.objects.get(id=id)
@@ -128,9 +124,7 @@ def render_line(request):
         return HttpResponseBadRequest("Required parameter 'lily_line' missing")
     lily_chords = request.GET.get("lily_chords", None)
     if not lily_chords:
-        return HttpResponseBadRequest(
-            "Required parameter 'lily_chords' missing"
-        )
+        return HttpResponseBadRequest("Required parameter 'lily_chords' missing")
 
     renderer = MusicRenderer()
     svg = renderer.render(lily_line, lily_chords)

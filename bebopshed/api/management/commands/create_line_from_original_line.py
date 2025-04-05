@@ -1,8 +1,9 @@
 from django.core.management.base import BaseCommand
+
 from api.models import Line
 from lily_proc.line_parser import LineParser
+from lily_proc.pitch import Accidental, BasePitch, Key
 from lily_proc.transpose import KeyTransposer
-from lily_proc.pitch import Key, BasePitch, Accidental
 
 
 class Command(BaseCommand):

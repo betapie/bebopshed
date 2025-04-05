@@ -1,7 +1,8 @@
 from fractions import Fraction
+
+from .duration import Duration
 from .music_object import MusicObject
 from .pitch import Pitch
-from .duration import Duration
 
 
 class Note(MusicObject):

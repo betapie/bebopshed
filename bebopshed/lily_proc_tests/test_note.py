@@ -1,7 +1,8 @@
 import unittest
+
+from lily_proc.duration import CommonDuration, Duration
 from lily_proc.note import Note
-from lily_proc.pitch import Pitch, BasePitch, Accidental, Octave
-from lily_proc.duration import Duration, CommonDuration
+from lily_proc.pitch import Accidental, BasePitch, Octave, Pitch
 
 
 class TestNote(unittest.TestCase):

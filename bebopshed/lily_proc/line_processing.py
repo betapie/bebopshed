@@ -1,7 +1,8 @@
 from typing import Optional
-from .line import Line
+
 from .chord import Chords
-from .pitch import Key, BasePitch, Accidental
+from .line import Line
+from .pitch import Accidental, BasePitch, Key
 from .transpose import KeyTransposer
 
 
@@ -14,9 +15,7 @@ class LineProcessor:
 
     def _create_processor(**kwargs):
         if "transpose" in kwargs:
-            return LineProcessor._create_transposer_processor(
-                **kwargs["transpose"]
-            )
+            return LineProcessor._create_transposer_processor(**kwargs["transpose"])
         if "chops_builder" in kwargs:
             return LineProcessor._create_chops_builder_processor(
                 **kwargs["chops_builder"]
@@ -98,9 +97,7 @@ class ChopsBuilderProcessor:
         chords.pad()
         result_line = Line([])
         result_chords = Chords([])
-        start_val = (
-            self.start_key.base_pitch.value + self.start_key.accidental.value
-        )
+        start_val = self.start_key.base_pitch.value + self.start_key.accidental.value
         if start_val < 0:
             start_val += 12
         elif start_val >= 12:

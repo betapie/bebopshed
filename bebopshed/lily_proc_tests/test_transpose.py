@@ -1,6 +1,7 @@
 import unittest
+
+from lily_proc.pitch import Accidental, BasePitch, Octave, Pitch
 from lily_proc.transpose import PitchTransposer
-from lily_proc.pitch import Pitch, BasePitch, Accidental, Octave
 
 
 class TestTransposer(unittest.TestCase):
@@ -30,7 +31,7 @@ class TestTransposer(unittest.TestCase):
             (
                 Pitch(BasePitch.D, Accidental.FLAT, Octave.ONE_LINED),
                 Pitch(BasePitch.F, Accidental.FLAT, Octave.ONE_LINED),
-            )
+            ),
         ]
 
         for pitch, transposed in cases:
@@ -62,7 +63,7 @@ class TestTransposer(unittest.TestCase):
             (
                 Pitch(BasePitch.G, Accidental.SHARP, Octave.ONE_LINED),
                 Pitch(BasePitch.E, Accidental.NATURAL, Octave.TWO_LINED),
-            )
+            ),
         ]
 
         for pitch, transposed in cases:
@@ -94,7 +95,7 @@ class TestTransposer(unittest.TestCase):
             (
                 Pitch(BasePitch.F, Accidental.FLAT, Octave.ONE_LINED),
                 Pitch(BasePitch.D, Accidental.FLAT, Octave.ONE_LINED),
-            )
+            ),
         ]
 
         for pitch, transposed in cases:

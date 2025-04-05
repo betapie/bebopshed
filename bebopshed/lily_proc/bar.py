@@ -1,5 +1,6 @@
 from fractions import Fraction
-from .duration import Duration, CommonDuration
+
+from .duration import CommonDuration, Duration
 
 
 class Bar:

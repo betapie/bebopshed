@@ -1,9 +1,10 @@
 import unittest
+
+from lily_proc.bar import Bar
+from lily_proc.duration import CommonDuration, Duration
 from lily_proc.line import Line
 from lily_proc.note import Note
-from lily_proc.bar import Bar
-from lily_proc.pitch import Pitch, BasePitch, Accidental, Octave
-from lily_proc.duration import Duration, CommonDuration
+from lily_proc.pitch import Accidental, BasePitch, Octave, Pitch
 
 
 class TestLine(unittest.TestCase):
@@ -79,9 +80,7 @@ class TestLine(unittest.TestCase):
             )
         ]
         line = Line(bars)
-        self.assertEqual(
-            "c''8 g'8 e'8 c'8 b'8 bes'8 a'8 aes'8 |", line.to_lily()
-        )
+        self.assertEqual("c''8 g'8 e'8 c'8 b'8 bes'8 a'8 aes'8 |", line.to_lily())
 
 
 if __name__ == "__main__":

@@ -1,5 +1,6 @@
-from enum import Enum
 import re
+from enum import Enum
+
 from .lily_error import LilyParseError
 
 
@@ -35,9 +36,7 @@ class Octave(Enum):
 
 
 class Pitch:
-    def __init__(
-        self, pitch: BasePitch, accidental: Accidental, octave: Octave
-    ):
+    def __init__(self, pitch: BasePitch, accidental: Accidental, octave: Octave):
         self.base_pitch = pitch
         self.accidental = accidental
         self.octave = octave
@@ -50,11 +49,7 @@ class Pitch:
         )
 
     def absolute_pitch(self) -> int:
-        return (
-            self.octave.value * 12
-            + self.base_pitch.value
-            + self.accidental.value
-        )
+        return self.octave.value * 12 + self.base_pitch.value + self.accidental.value
 
     @staticmethod
     def from_lily(string: str):
@@ -170,8 +165,7 @@ class Key:
 
     def __eq__(self, other):
         return (
-            self.base_pitch == other.base_pitch
-            and self.accidental == other.accidental
+            self.base_pitch == other.base_pitch and self.accidental == other.accidental
         )
 
     @staticmethod

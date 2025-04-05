@@ -1,5 +1,5 @@
-import sys
 import os
+import sys
 
 # TODO: Maybe use setuptools instead?
 sys.path.append(os.path.join(os.path.dirname(__file__), ".."))
@@ -23,22 +23,16 @@ def main():
 
     builder = LilyBuilder()
 
-    builder.add(
-        LilyCommand("include", '"lily_proc/lily_styles/line.ily"')
-    ).add(
+    builder.add(LilyCommand("include", '"lily_proc/lily_styles/line.ily"')).add(
         LilyCommand("include", '"lily_proc/lily_styles/lilyjazz.ily"')
-    ).add(
-        LilyCommand("include", '"lily_proc/lily_styles/jazzchords.ily"')
-    )
+    ).add(LilyCommand("include", '"lily_proc/lily_styles/jazzchords.ily"'))
 
     builder.add(
         LilyExpression(
             "score",
             LilySimulExpression(
                 LilyExpression("chords", chords),
-                LilyExpression(
-                    "new Staff", LilyExpression("relative c", line)
-                ),
+                LilyExpression("new Staff", LilyExpression("relative c", line)),
             ),
         )
     )

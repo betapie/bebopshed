@@ -1,14 +1,15 @@
 import subprocess
 import tempfile
+
 import decouple
 
+from .chord import Chords
 from .lily_builder import (
     LilyBuilder,
     LilyExpression,
     LilySimulExpression,
 )
 from .line_parser import LineParser
-from .chord import Chords
 from .line_processing import LineProcessor
 
 

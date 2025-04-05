@@ -1,6 +1,7 @@
+import re
 from enum import Enum
 from fractions import Fraction
-import re
+
 from .lily_error import LilyParseError
 
 
@@ -19,10 +20,7 @@ class Duration:
         self.dots = dots
 
     def __eq__(self, other):
-        return (
-            self.base_duration == other.base_duration
-            and self.dots == other.dots
-        )
+        return self.base_duration == other.base_duration and self.dots == other.dots
 
     def value(self):
         denom = self.base_duration.value
@@ -41,9 +39,7 @@ class Duration:
         groups = match.groups()
 
         if not groups or len(groups) < 2:
-            raise LilyParseError(
-                f"Duration.from_lily: Invalid expression: {string}"
-            )
+            raise LilyParseError(f"Duration.from_lily: Invalid expression: {string}")
         dots = len(groups[1])
 
         if groups[0] == "1":

@@ -1,4 +1,5 @@
 from fractions import Fraction
+
 from .music_object import MusicObject
 
 

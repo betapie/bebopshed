@@ -1,12 +1,13 @@
-from fractions import Fraction
 import re
-from .music_object import BarLine, Tie, Rest
-from .note import Note
+from fractions import Fraction
+
 from .bar import Bar
-from .line import Line
-from .tuplet import Tuplet
 from .duration import CommonDuration, Duration
 from .lily_error import LilyParseError
+from .line import Line
+from .music_object import BarLine, Rest, Tie
+from .note import Note
+from .tuplet import Tuplet
 
 
 class LineParser:
@@ -22,10 +23,7 @@ class LineParser:
                 bar = Bar(objects)
                 if not bar.duration_check():
                     raise LilyParseError(
-                        (
-                            "LineParser: duration check for bar:"
-                            f" '{bar_str}' failed"
-                        )
+                        ("LineParser: duration check for bar:" f" '{bar_str}' failed")
                     )
                 bars.append(bar)
 
