@@ -12,9 +12,9 @@ RUN apt update && apt install -y \
 
 RUN python3 -m venv /app/venv
 
-COPY bebopshed/requirements.txt /app/
+COPY bebopshed/requirements.dev.txt /app/
 
-RUN /app/venv/bin/pip install --upgrade pip && /app/venv/bin/pip install -r requirements.txt
+RUN /app/venv/bin/pip install --upgrade pip && /app/venv/bin/pip install -r requirements.dev.txt
 
 RUN git clone https://github.com/OpenLilyPondFonts/lilyjazz.git /tmp/lilyjazz && \
   cp -r /tmp/lilyjazz/otf/* /usr/share/lilypond/2.24.3/fonts/otf && \
